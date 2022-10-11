@@ -1,0 +1,23 @@
+{
+  "name": "practica-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sv54/API-UApenBook-ADI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sv54/API-UApenBook-ADI/issues"
+  },
+  "homepage": "https://github.com/sv54/API-UApenBook-ADI#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
