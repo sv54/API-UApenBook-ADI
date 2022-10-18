@@ -15,9 +15,9 @@ let db = new sqlite3.Database('DataBase.db', (err) => {
 // https://www.sqlitetutorial.net/sqlite-nodejs/
 
 //SQL Query
-var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY, name TEXT NOT NULL)')
+var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
 db.run(sql)
-db.run('INSERT INTO books VALUES(?)', ['Harry Potter'], function(err){
+db.run('INSERT INTO books (name) VALUES(?)', ['Harry Potter'], function(err){
     if (err) {
         return console.log(err.message);
       }
