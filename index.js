@@ -15,17 +15,17 @@ let db = new sqlite3.Database('DataBase.db', (err) => {
 // https://www.sqlitetutorial.net/sqlite-nodejs/
 
 //SQL Query
-var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
-db.run(sql)
-db.run('INSERT INTO books (name) VALUES(?)', ['Harry Potter'], function(err){
-    if (err) {
-        return console.log(err.message);
-      }
-      // get the last insert id
-    console.log(`A row has been inserted with rowid ${this.lastID}`);
-})
-console.log(db.run('SELECT * FROM books'))
-db.close
+// var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
+// db.run(sql)
+// db.run('INSERT INTO books (name) VALUES(?)', ['Harry Potter'], function(err){
+//     if (err) {
+//         return console.log(err.message);
+//       }
+//       // get the last insert id
+//     console.log(`A row has been inserted with rowid ${this.lastID}`);
+// })
+// console.log(db.run('SELECT * FROM books'))
+// db.close
 
 
 //Home
