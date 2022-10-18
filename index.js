@@ -37,7 +37,10 @@ app.get('/', function(req, res){
 
 app.get('/books', function(req, res){
     console.log('Abrimos la pagina Home --> Obtener datos de sesion actual si existe y coleccion de libros')
-    res.end()
+
+    var libros = db.run('SELECT * FROM books')
+    console.log(libros)
+    res.send(libros)
 })
 
 app.get('/books/:id', function(req, res){
