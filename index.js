@@ -44,7 +44,7 @@ app.get('/books', function (req, res) {
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
     let sql = `SELECT * From books`;
@@ -66,16 +66,17 @@ app.get('/books/:id', function (req, res) {
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
-        if (err) {
+        if (JSON.stringify(row) == "[]") {
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
-
-        res.send({ "status": 200, "libro": row })
+        else{
+            res.send({ "status": 200, "libro": row })
+        }
     });
     db.close()
 
@@ -91,7 +92,7 @@ app.post('/books', function (req, res) {
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
     //Comprobar si el usuario esta autorizado a hacer la petcion primero (esta logeado)
@@ -105,7 +106,7 @@ app.post('/books', function (req, res) {
                 //console.log("err:",err.message);
             }
             // get the last insert id
-            console.log(`A row has been inserted with rowid ${this.lastID}`);
+            //console.log(`A row has been inserted with rowid ${this.lastID}`);
 
             res.send({ "status code": status, "message:": message })
         });
@@ -119,7 +120,7 @@ app.post('/login', function(req,res){
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
     var email = req.body.email
@@ -170,34 +171,34 @@ app.delete('/books/:id', function(req, res){
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
 
     //Comprobamos que el libro existe
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
+
+    //Comprobar si el usuario esta autorizado a hacer delete primero!
+    //res.send({"status": 403, "message" : "Forbidden"});
+    //
+
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
-            //Comprobar si el usuario esta autorizado a hacer delete primero!
-            //res.send({"status": 403, "message" : "Forbidden"});
-            //
-
             sql = `DELETE FROM books WHERE id = ` + idLibro;
             db.all(sql, [], (err, row) => {
                 if (err) {
                     res.send({ "status": 500, "message": "Error al eliminar libro" });
 
                 } else {
-                    res.send({ "status": 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
+                    res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
                 }
 
             });
         }
-        console.log(JSON.stringify(row))
     });
 
 
@@ -216,7 +217,7 @@ app.patch('/books/:id', function (req, res) {
         if (err) {
             return console.error(err.message);
         }
-        console.log('Connected to the SQlite database.');
+        //console.log('Connected to the SQlite database.');
     });
 
     //Comprobamos que el libro existe
@@ -247,7 +248,7 @@ app.patch('/books/:id', function (req, res) {
                     res.send({ "status": 404, "message": err });
 
                 } else {
-                    res.send({ "status": 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
+                    res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
                 }
 
             });
