@@ -51,7 +51,23 @@ app.get('/books/:id', function(req, res){
 })
 
 
-app.post('/')
+app.post('/books', function(req,res){
+
+    //var datos = JSON.parse(req)
+    console.log(req.body.nombre)
+
+    var resultado = db.run(`INSERT INTO books() VALUES(?,?,?,?,?,?,?)`, 
+    [''], function(err) {
+        if (err) {
+          return console.log(err.message);
+        }
+        // get the last insert id
+        console.log(`A row has been inserted with rowid ${this.lastID}`);
+      });
+
+    res.send({"msg": "okk", 
+    "nombre": req.body.nombre})
+})
 
 app.listen(3000, function(){
 	console.log("Servidor arrancado!!!")
