@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS author(
     name TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS books(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    name TEXT NOT NULL, 
     year INTEGER, 
     language TEXT NOT NULL, 
     description TEXT NOT NULL, 
