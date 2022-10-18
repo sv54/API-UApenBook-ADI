@@ -52,21 +52,25 @@ app.get('/books/:id', function(req, res){
 
 
 app.post('/books', function(req,res){
-
+    var status=200
+    var message="ok"
     //var datos = JSON.parse(req)
     console.log(req.body.nombre)
+    var b = req.body
 
-    var resultado = db.run(`INSERT INTO books() VALUES(?,?,?,?,?,?,?)`, 
-    [''], function(err) {
+    db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author) VALUES(?,?,?,?,?,?,?)`, 
+    [b.name,b.year,b.language,b.description,b.cover,b.pdf,b.author], function(err) {
         if (err) {
-          return console.log(err.message);
+            message = err.message;
+            status = 400
+            console.log("err:",err.message);
         }
         // get the last insert id
         console.log(`A row has been inserted with rowid ${this.lastID}`);
-      });
 
-    res.send({"msg": "okk", 
-    "nombre": req.body.nombre})
+        res.send({"status code":status,
+    "message:":message})
+      });
 })
 
 app.listen(3000, function(){
