@@ -61,10 +61,22 @@ app.get('/books', function(req, res){
 });
 
 app.get('/books/:id', function(req, res){
-    const idLibro = req.params.id //recuperamos el id que se nos pasa como parametro
+    const idLibro = req.params.id
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Connected to the SQlite database.');
+    });
 
-    console.log('Abrimos la pagina de un libro')
-    res.end()
+    let sql = `SELECT * From books WHERE id = ` + idLibro;
+    db.all(sql, [], (err, row) => {
+        if (err) {
+            res.send({"status": 404, "message" : "El libro no existe o ya ha sido eliminado"});
+        }
+        
+        res.send({"status" : 200, "libro": row})
+    });
 })
 
 
@@ -87,13 +99,12 @@ app.post('/books', function(req,res){
         if (err) {
             message = err.message;
             status = 400
-            console.log("err:",err.message);
+            //console.log("err:",err.message);
         }
         // get the last insert id
         console.log(`A row has been inserted with rowid ${this.lastID}`);
 
-        res.send({"status code":status,
-    "message:":message})
+        res.send({"status code":status, "message:":message})
       });
 
       db.close()
@@ -150,6 +161,32 @@ app.post('/login', function(req,res){
     })
 })
 
+app.delete('/books/:id', function(req, res){
+    const idLibro = req.params.id
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Connected to the SQlite database.');
+    });
+
+    let sql = `DELETE FROM books WHERE id = ` + idLibro;
+
+    //Comprobar si el usuario esta autorizado a hacer delete primero!
+    //res.send({"status": 403, "message" : "Forbidden"});
+    //
+
+    db.all(sql, [], (err, row) => {
+        if (err) {
+            res.send({"status": 404, "message" : "El libro no existe o ya ha sido eliminado"});
+
+        }else{
+            res.send({"status" : 200, "Mensaje": "Libro con id " + idLibro +" borrado."})
+        }
+        
+    });
+})
+
 app.listen(3000, function(){
-	console.log("Servidor arrancado!!!")
+	console.log("Servidor arrancado")
 })
