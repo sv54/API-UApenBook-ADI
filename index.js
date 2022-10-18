@@ -138,7 +138,7 @@ app.post('/login', function(req,res){
             if(rows[0].password == password){
                 var payload = {
                     login:email,
-                    exp: moment().add(1,'days').valueOf()
+                    password:password
                 }
     
                 var token = jwt.encode(payload,config.SECRET)
