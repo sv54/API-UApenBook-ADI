@@ -52,9 +52,10 @@ app.get('/books', function (req, res) {
         if (err) {
             throw err;
         }
-        rows.forEach((row) => {
-            console.log(row);
-        });
+        // rows.forEach((row) => {
+        //     console.log(row);
+        // });
+        res.statusCode = 200
         res.send({ "status": 200, "libros": rows })
     });
     db.close()
@@ -72,9 +73,11 @@ app.get('/books/:id', function (req, res) {
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else{
+            res.statusCode = 200
             res.send({ "status": 200, "libro": row })
         }
     });
@@ -107,7 +110,7 @@ app.post('/books', function (req, res) {
             }
             // get the last insert id
             //console.log(`A row has been inserted with rowid ${this.lastID}`);
-
+            res.statusCode = status
             res.send({ "status code": status, "message:": message })
         });
 
@@ -148,6 +151,7 @@ app.post('/login', function(req,res){
                     jwt: token
                 })      
             }else{
+                res.statusCode = 403
                 res.send({
                     mensaje:"Email o contraseña incorrectos.",
                     status:403
@@ -157,6 +161,7 @@ app.post('/login', function(req,res){
 
     }else{
         console.log(err.message)
+        res.statusCode = 403
         res.send({
             mensaje:err.message,
             code:403
@@ -191,9 +196,11 @@ app.delete('/books/:id', function(req, res){
             sql = `DELETE FROM books WHERE id = ` + idLibro;
             db.all(sql, [], (err, row) => {
                 if (err) {
+                    res.statusCode = 500
                     res.send({ "status": 500, "message": "Error al eliminar libro" });
 
                 } else {
+                    res.statusCode = 200
                     res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
                 }
 
@@ -225,6 +232,7 @@ app.patch('/books/:id', function (req, res) {
     const emptyjson = {}
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
@@ -244,10 +252,11 @@ app.patch('/books/:id', function (req, res) {
 
             db.all(sql, [], (err, row) => {
                 if (err) {
-                    throw err
+                    res.statusCode = 404
                     res.send({ "status": 404, "message": err });
 
                 } else {
+                    res.statusCode = 404
                     res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
                 }
 
