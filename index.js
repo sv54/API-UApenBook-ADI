@@ -1,10 +1,12 @@
 // Librerias
+const { response } = require('express');
 const express = require('express'); 
 const app = express(); 
 app.use(express.json()); 
 const sqlite3 = require('sqlite3').verbose();
-
-
+var jwt = require('jwt-simple')
+var moment = require('moment')
+const config = require('./config.js');
 // Usar db.close() para cerrar la conexion
 // Info sobre sqlite y nodeJs
 // https://www.sqlitetutorial.net/sqlite-nodejs/
@@ -95,6 +97,57 @@ app.post('/books', function(req,res){
       });
 
       db.close()
+})
+
+app.post('/login', function(req,res){
+
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Connected to the SQlite database.');
+    });
+
+    var email = req.body.email
+    var password = req.body.password
+
+    var sql = `SELECT password FROM users WHERE email='`+[email]+`'`;
+    db.all(sql, function(err,rows){
+
+    if(!err){
+        if(!rows[0]){
+            res.send({
+                mensaje:"Email o contraseña incorrectos.",
+                status:403
+            })
+        }else{
+            if(rows[0].password == password){
+                var payload = {
+                    login:email,
+                    exp: moment().add(1,'days').valueOf()
+                }
+    
+                var token = jwt.encode(payload,config.SECRET)
+                res.send({
+                    mensaje:"OK",
+                    jwt: token
+                })      
+            }else{
+                res.send({
+                    mensaje:"Email o contraseña incorrectos.",
+                    status:403
+                })
+            }
+        }
+
+    }else{
+        console.log(err.message)
+        res.send({
+            mensaje:err.message,
+            code:403
+        })
+    }
+    })
 })
 
 app.listen(3000, function(){
