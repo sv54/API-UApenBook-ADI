@@ -37,7 +37,7 @@ app.get('/', function(req, res){
 
 
 app.get('/books', function(req, res){
-    
+
     let db = new sqlite3.Database('DataBase.db', (err) => {
         if (err) {
             return console.error(err.message);
@@ -53,8 +53,9 @@ app.get('/books', function(req, res){
         rows.forEach((row) => {
           console.log(row);
         });
+        res.send({"status" : 200, "libros": rows})
     });
-    res.sendStatus(200); //Enviar tambien libros
+    //res.sendStatus(200); //Enviar tambien libros
 });
 
 app.get('/books/:id', function(req, res){
@@ -72,6 +73,13 @@ app.post('/books', function(req,res){
     console.log(req.body.nombre)
     var b = req.body
 
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Connected to the SQlite database.');
+    });
+
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author) VALUES(?,?,?,?,?,?,?)`, 
     [b.name,b.year,b.language,b.description,b.cover,b.pdf,b.author], function(err) {
         if (err) {
@@ -85,6 +93,8 @@ app.post('/books', function(req,res){
         res.send({"status code":status,
     "message:":message})
       });
+
+      db.close()
 })
 
 app.listen(3000, function(){
