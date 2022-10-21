@@ -42,6 +42,7 @@ app.get('/', function (req, res) {
 //Obtenemos todos los libros de la BD
 //Falta por hacer:
 //paginacion --> Obtener x libros por cada pagina
+//Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
     let db = new sqlite3.Database('DataBase.db', (err) => {
@@ -50,6 +51,28 @@ app.get('/books', function (req, res) {
         }
         //console.log('Connected to the SQlite database.');
     });
+
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):0;
+    const page = req.query.page ? parseInt(req.query.page):0;
+    const startIndex = (page-1)*pageSize;
+    const endIndex = page*pageSize;
+
+    const results={}
+
+    var nextPage = page+1
+    var prevPage = page-1
+    var nextURL= '/books?page='+nextPage+'&pageSize='+pageSize
+    var prevURL= '/books?page='+prevPage+'&pageSize='+pageSize
+
+    if (prevPage<=0){
+        prevURL=''
+    }
+
+    results.status=''
+    results.pages = {
+        nextURL: nextURL,
+        prevURL: prevURL
+    }
 
     let sql = `SELECT * From books`;
 
@@ -60,7 +83,19 @@ app.get('/books', function (req, res) {
         }
         else{
             res.statusCode = 200
-            res.send({ "status": 200, "libros": rows })
+
+            var libros = rows.slice(startIndex,endIndex);
+
+            results['Libros en total']=rows.length;
+            results['Libros en esta pagina']=libros.length;
+            results['Libros']=libros;
+
+            if(results['Libros en total']<=pageSize*(page-1)+results['Libros en esta pagina']){
+                results.pages.nextURL=''
+            }
+
+            results.status=200
+            res.send(results)
         }
         // rows.forEach((row) => {
         //     console.log(row);

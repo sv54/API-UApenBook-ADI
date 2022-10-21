@@ -28,5 +28,15 @@ CREATE TABLE IF NOT EXISTS books(
     FOREIGN KEY (author) REFERENCES author(id));
 
 
-INSERT INTO books (name, language, description) VALUES('Harry Potter', 'Español', 'Ya tu sabs');
 INSERT INTO users (name,email,avatar,password,admin) VALUES('Juarry', 'user1@ua', 'potter.png','12345',false);
+INSERT INTO books (name, language, description) VALUES('Harry Potter 1: La academia', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 2: El legado', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 3: La piedra', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 4: La camara', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 5: El prisionero', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 6: Las reliquias 1', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 7: Las reliquias 2', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 8: Las reliquias 3', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 9: Las reliquias 4', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 10: Bestias', 'Español', 'Ya tu sabs');
+INSERT INTO books (name, language, description) VALUES('Harry Potter 11: Bestias 2', 'Español', 'Ya tu sabs');
