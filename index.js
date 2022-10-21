@@ -125,7 +125,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
             // get the last insert id
             //console.log(`A row has been inserted with rowid ${this.lastID}`);
             res.statusCode = status
-            res.send({ "status code": status, "message:": message })
+            res.send({ "status code": status, "message:": message, "id": this.lastID })
         });
 
     db.close()
