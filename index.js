@@ -9,6 +9,7 @@ var jwt = require('jwt-simple')
 var moment = require('moment')
 const config = require('./config.js');
 var multer = require('multer');
+var mw = require('./middleware.js');
 
 
 var fileStoregeEngine = multer.diskStorage({
@@ -21,8 +22,7 @@ var fileStoregeEngine = multer.diskStorage({
 });
 
 const upload = multer({storage: fileStoregeEngine});
-var config = require('./config.js');
-var mw = require('./middleware.js');
+
 
 // Usar db.close() para cerrar la conexion
 // Info sobre sqlite y nodeJs
