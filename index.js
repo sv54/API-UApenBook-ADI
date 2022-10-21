@@ -7,7 +7,6 @@ app.use(express.json());
 const sqlite3 = require('sqlite3').verbose();
 var jwt = require('jwt-simple')
 var moment = require('moment')
-<<<<<<< HEAD
 const config = require('./config.js');
 var multer = require('multer');
 
@@ -22,7 +21,6 @@ var fileStoregeEngine = multer.diskStorage({
 });
 
 const upload = multer({storage: fileStoregeEngine});
-=======
 var config = require('./config.js');
 var mw = require('./middleware.js');
 
@@ -48,7 +46,6 @@ var mw = require('./middleware.js');
 //   });
 // console.log(db.run('SELECT * FROM books'))
 // db.close
->>>>>>> c8001dc7720a47c15876bf8ead42db4a80a32e46
 
 
 //Home
