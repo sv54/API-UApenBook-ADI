@@ -27,6 +27,10 @@ CREATE TABLE IF NOT EXISTS books(
     author INTEGER,
     FOREIGN KEY (author) REFERENCES author(id));
 
+CREATE TABLE IF NOT EXISTS images(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL);
+
 
 INSERT INTO books (name, language, description) VALUES('Harry Potter', 'Español', 'Ya tu sabs');
 INSERT INTO users (name,email,avatar,password,admin) VALUES('Juarry', 'user1@ua', 'potter.png','12345',false);

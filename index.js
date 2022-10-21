@@ -1,34 +1,26 @@
 // Librerias
 const { response } = require('express');
 const express = require('express'); 
+var router = express.Router();
 const app = express(); 
 app.use(express.json()); 
 const sqlite3 = require('sqlite3').verbose();
 var jwt = require('jwt-simple')
 var moment = require('moment')
 const config = require('./config.js');
-// Usar db.close() para cerrar la conexion
-// Info sobre sqlite y nodeJs
-// https://www.sqlitetutorial.net/sqlite-nodejs/
+var multer = require('multer');
 
-//SQL Query
-// var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
-// db.run(sql)
-// db.run('INSERT INTO books (name, language, description) VALUES(?, ?, ?)', ['Harry Potter', 'Spanish', 'Pues eso'], function(err){
-//     if (err) {
-//         return console.log(err.message);
-//       }
-//       // get the last insert id
-//     console.log(`A row has been inserted with rowid ${this.lastID}`);
-// })
-// db.close((err) => {
-//     if (err) {
-//       console.error(err.message);
-//     }
-//     console.log('Close the database connection.');
-//   });
-// console.log(db.run('SELECT * FROM books'))
-// db.close
+
+var fileStoregeEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads')
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+const upload = multer({storage: fileStoregeEngine});
 
 
 //Home
@@ -36,6 +28,19 @@ app.get('/', function (req, res) {
     res.redirect('/books')
     //redireccionamos a la pagina principal /books
 })
+
+
+
+
+app.post('/single', upload.single('image'), (req, res) => {
+    console.log(req.file);
+    res.send("Single File upload success")
+});
+
+// app.post('/multiple', upload.array('image', 3), (req, res) => {
+//     res.send("Multiple Files uploadede")
+// });
+
 
 //Obtenemos todos los libros de la BD
 //Falta por hacer:
