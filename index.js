@@ -7,6 +7,7 @@ app.use(express.json());
 const sqlite3 = require('sqlite3').verbose();
 var jwt = require('jwt-simple')
 var moment = require('moment')
+<<<<<<< HEAD
 const config = require('./config.js');
 var multer = require('multer');
 
@@ -21,6 +22,33 @@ var fileStoregeEngine = multer.diskStorage({
 });
 
 const upload = multer({storage: fileStoregeEngine});
+=======
+var config = require('./config.js');
+var mw = require('./middleware.js');
+
+// Usar db.close() para cerrar la conexion
+// Info sobre sqlite y nodeJs
+// https://www.sqlitetutorial.net/sqlite-nodejs/
+
+//SQL Query
+// var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
+// db.run(sql)
+// db.run('INSERT INTO books (name, language, description) VALUES(?, ?, ?)', ['Harry Potter', 'Spanish', 'Pues eso'], function(err){
+//     if (err) {
+//         return console.log(err.message);
+//       }
+//       // get the last insert id
+//     console.log(`A row has been inserted with rowid ${this.lastID}`);
+// })
+// db.close((err) => {
+//     if (err) {
+//       console.error(err.message);
+//     }
+//     console.log('Close the database connection.');
+//   });
+// console.log(db.run('SELECT * FROM books'))
+// db.close
+>>>>>>> c8001dc7720a47c15876bf8ead42db4a80a32e46
 
 
 //Home
@@ -104,7 +132,7 @@ app.get('/books/:id', function (req, res) {
 //publicamos un libro
 //Falta por hacer
 //Comprobacion de si el usuario esta logeado y tiene permisos
-app.post('/books', function (req, res) {
+app.post('/books', mw.checkJWT, function (req, res) {
     var status = 201
     var message = "Libro ha sido creado"
     var b = req.body
@@ -137,7 +165,7 @@ app.post('/books', function (req, res) {
 //Eliminar un libro
 //Falta por hacer
 //Comprobacion de si el usuario esta logeado y tiene permisos
-app.delete('/books/:id', function(req, res){
+app.delete('/books/:id', mw.checkJWT, function(req, res){
     const idLibro = req.params.id
     let db = new sqlite3.Database('DataBase.db', (err) => {
         if (err) {
@@ -187,7 +215,7 @@ app.delete('/books/:id', function(req, res){
 //Modificamos un libro existente
 //Falta por hacer
 //Comprobacion de si el usuario esta logeado y tiene permisos
-app.patch('/books/:id', function (req, res) {
+app.patch('/books/:id', mw.checkJWT, function (req, res) {
     const idLibro = req.params.id
     var b = req.body
 
@@ -302,7 +330,7 @@ app.post('/login', function(req,res){
 //Comprobar que el usuario logeado es un administrador
 
 //Obtener todos los usuarios de la BD
-app.get('/users', function (req, res) {
+app.get('/users', mw.checkJWT, function (req, res) {
 
     //Comprobar si el usuario logeado es admin!
     //res.send({"status": 403, "message" : "Forbidden"});
@@ -332,7 +360,7 @@ app.get('/users', function (req, res) {
 });
 
 //Obtenemos un usuario segun su id
-app.get('/users/:id', function (req, res) {
+app.get('/users/:id', mw.checkJWT, function (req, res) {
 
     //Comprobar si el usuario logeado es admin!
     //res.send({"status": 403, "message" : "Forbidden"});
@@ -360,7 +388,7 @@ app.get('/users/:id', function (req, res) {
 
 })
 
-app.delete('/users/:id', function(req, res){
+app.delete('/users/:id', mw.checkJWT, function(req, res){
 
     //Comprobar si el usuario esta autorizado a hacer delete primero!
     //Debe ser usuario que ha subido el libro o administrador
