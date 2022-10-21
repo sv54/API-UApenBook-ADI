@@ -50,16 +50,20 @@ app.get('/books', function (req, res) {
     });
 
     let sql = `SELECT * From books`;
+
     db.all(sql, [], (err, rows) => {
         if (err) {
             res.statusCode = 500
-            res.send({"status": 500, "error": err })
+            res.send({"status": 500, "error": err.message })
+        }
+        else{
+            res.statusCode = 200
+            res.send({ "status": 200, "libros": rows })
         }
         // rows.forEach((row) => {
         //     console.log(row);
         // });
-        res.statusCode = 200
-        res.send({ "status": 200, "libros": rows })
+        
     });
     db.close()
 });
@@ -76,9 +80,11 @@ app.get('/books/:id', function (req, res) {
 
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
-        if (JSON.stringify(row) == "[]") {
+        console.log(row)
+
+        if (JSON.stringify(row) == "[]" || row == undefined) {
             res.statusCode = 404
-            res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
+            res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
         }
         else{
             res.statusCode = 200
@@ -94,8 +100,8 @@ app.get('/books/:id', function (req, res) {
 //Falta por hacer
 //Comprobacion de si el usuario esta logeado y tiene permisos
 app.post('/books', function (req, res) {
-    var status = 200
-    var message = "ok"
+    var status = 201
+    var message = "Libro ha sido creado"
     var b = req.body
 
     let db = new sqlite3.Database('DataBase.db', (err) => {
@@ -113,7 +119,6 @@ app.post('/books', function (req, res) {
             if (err) {
                 message = err.message;
                 status = 400
-                //console.log("err:",err.message);
             }
             // get the last insert id
             //console.log(`A row has been inserted with rowid ${this.lastID}`);
@@ -263,6 +268,7 @@ app.post('/login', function(req,res){
                 }
     
                 var token = jwt.encode(payload,config.SECRET)
+                res.statusCode = 200
                 res.send({
                     mensaje:"OK",
                     jwt: token
@@ -311,8 +317,11 @@ app.get('/users', function (req, res) {
             res.statusCode = 500
             res.send({ "status": 500, "error": err });
         }
-        res.statusCode = 200
-        res.send({ "status": 200, "users": rows })
+        else{
+            res.statusCode = 200
+            res.send({ "status": 200, "users": rows })
+        }
+
     });
     db.close()
 });
@@ -331,22 +340,22 @@ app.get('/users/:id', function (req, res) {
         //console.log('Connected to the SQlite database.');
     });
 
-    let sql = `SELECT * From books WHERE id = ` + idLibro;
+    let sql = `SELECT * From users WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
             res.statusCode = 404
-            res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
+            res.send({ "status": 404, "message": "El user no existe o ya ha sido eliminado" });
         }
         else{
             res.statusCode = 200
-            res.send({ "status": 200, "libro": row })
+            res.send({ "status": 200, "user": row })
         }
     });
     db.close()
 
 })
 
-app.delete('/books/:id', function(req, res){
+app.delete('/users/:id', function(req, res){
 
     //Comprobar si el usuario esta autorizado a hacer delete primero!
     //Debe ser usuario que ha subido el libro o administrador
