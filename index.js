@@ -1,13 +1,28 @@
 // Librerias
 const { response } = require('express');
 const express = require('express'); 
+var router = express.Router();
 const app = express(); 
 app.use(express.json()); 
 const sqlite3 = require('sqlite3').verbose();
 var jwt = require('jwt-simple')
 var moment = require('moment')
-var config = require('./config.js');
+const config = require('./config.js');
+var multer = require('multer');
 var mw = require('./middleware.js');
+
+
+var fileStoregeEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads')
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+const upload = multer({storage: fileStoregeEngine});
+
 
 // Usar db.close() para cerrar la conexion
 // Info sobre sqlite y nodeJs
@@ -38,6 +53,19 @@ app.get('/', function (req, res) {
     res.redirect('/books')
     //redireccionamos a la pagina principal /books
 })
+
+
+
+
+app.post('/single', upload.single('image'), (req, res) => {
+    console.log(req.file);
+    res.send("Single File upload success")
+});
+
+// app.post('/multiple', upload.array('image', 3), (req, res) => {
+//     res.send("Multiple Files uploadede")
+// });
+
 
 //Obtenemos todos los libros de la BD
 //Falta por hacer:
@@ -295,7 +323,7 @@ app.post('/login', function(req,res){
         if(!rows[0]){
             res.send({
                 mensaje:"Email o contraseña incorrectos.",
-                status:403
+                status:401
             })
         }else{
             if(rows[0].password == password){
@@ -311,20 +339,20 @@ app.post('/login', function(req,res){
                     jwt: token
                 })      
             }else{
-                res.statusCode = 403
+                res.statusCode = 401
                 res.send({
                     mensaje:"Email o contraseña incorrectos.",
-                    status:403
+                    status:401
                 })
             }
         }
 
     }else{
         console.log(err.message)
-        res.statusCode = 403
+        res.statusCode = 500
         res.send({
             mensaje:err.message,
-            code:403
+            code:500
         })
     }
     })
