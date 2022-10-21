@@ -52,7 +52,8 @@ app.get('/books', function (req, res) {
     let sql = `SELECT * From books`;
     db.all(sql, [], (err, rows) => {
         if (err) {
-            throw err;
+            res.statusCode = 500
+            res.send({"status": 500, "error": err })
         }
         // rows.forEach((row) => {
         //     console.log(row);
@@ -136,6 +137,7 @@ app.delete('/books/:id', function(req, res){
     });
 
     //Comprobar si el usuario esta autorizado a hacer delete primero!
+    //Debe ser usuario que ha subido el libro o administrador
     //res.send({"status": 403, "message" : "Forbidden"});
     //
 
@@ -147,6 +149,7 @@ app.delete('/books/:id', function(req, res){
 
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
@@ -282,6 +285,112 @@ app.post('/login', function(req,res){
         })
     }
     })
+})
+
+//Panel de administracion.
+//Comprobar que el usuario logeado es un administrador
+
+//Obtener todos los usuarios de la BD
+app.get('/users', function (req, res) {
+
+    //Comprobar si el usuario logeado es admin!
+    //res.send({"status": 403, "message" : "Forbidden"});
+
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        //console.log('Connected to the SQlite database.');
+    });
+
+    
+
+    let sql = `SELECT * From users`;
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            res.statusCode = 500
+            res.send({ "status": 500, "error": err });
+        }
+        res.statusCode = 200
+        res.send({ "status": 200, "users": rows })
+    });
+    db.close()
+});
+
+//Obtenemos un usuario segun su id
+app.get('/users/:id', function (req, res) {
+
+    //Comprobar si el usuario logeado es admin!
+    //res.send({"status": 403, "message" : "Forbidden"});
+
+    const idLibro = req.params.id
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        //console.log('Connected to the SQlite database.');
+    });
+
+    let sql = `SELECT * From books WHERE id = ` + idLibro;
+    db.all(sql, [], (err, row) => {
+        if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
+            res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
+        }
+        else{
+            res.statusCode = 200
+            res.send({ "status": 200, "libro": row })
+        }
+    });
+    db.close()
+
+})
+
+app.delete('/books/:id', function(req, res){
+
+    //Comprobar si el usuario esta autorizado a hacer delete primero!
+    //Debe ser usuario que ha subido el libro o administrador
+    //res.send({"status": 403, "message" : "Forbidden"});
+    //
+
+    const idUser = req.params.id
+    let db = new sqlite3.Database('DataBase.db', (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        //console.log('Connected to the SQlite database.');
+    });
+
+
+    //Comprobamos que el libro existe
+    var sql = `SELECT * FROM users WHERE id = ` + idUser;
+    
+
+    db.all(sql, [], (err, row) => {
+        if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
+            res.send({ "status": 404, "message": "El usuario no existe o ya ha sido eliminado" });
+        }
+        else {
+            sql = `DELETE FROM users WHERE id = ` + idUser;
+            db.all(sql, [], (err, row) => {
+                if (err) {
+                    res.statusCode = 500
+                    res.send({ "status": 500, "message": "Error interno al eliminar usuario" });
+
+                } else {
+                    res.statusCode = 200
+                    res.send({ status: 200, "Mensaje": "Usuario con id " + idUser + " borrado." })
+                }
+
+            });
+        }
+    });
+
+
+
+    db.close()
+
 })
 
 
