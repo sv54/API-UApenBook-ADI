@@ -288,7 +288,7 @@ app.post('/login', function(req,res){
         if(!rows[0]){
             res.send({
                 mensaje:"Email o contraseña incorrectos.",
-                status:403
+                status:401
             })
         }else{
             if(rows[0].password == password){
@@ -304,20 +304,20 @@ app.post('/login', function(req,res){
                     jwt: token
                 })      
             }else{
-                res.statusCode = 403
+                res.statusCode = 401
                 res.send({
                     mensaje:"Email o contraseña incorrectos.",
-                    status:403
+                    status:401
                 })
             }
         }
 
     }else{
         console.log(err.message)
-        res.statusCode = 403
+        res.statusCode = 500
         res.send({
             mensaje:err.message,
-            code:403
+            code:500
         })
     }
     })
