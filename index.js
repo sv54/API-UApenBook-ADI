@@ -237,6 +237,25 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
     });
 })
 
+//Registro de usuario
+app.post('/register', function(req,res){
+    var r = req.body
+    var email = r.email
+    var name = r.name
+    var avatar = r.avatar
+    var password = r.password
+    var admin = r.admin
+
+    db.run(`INSERT INTO users(name,email,avatar,password,admin) VALUES(?,?,?,?,?)`,[name,email,avatar,password,admin],function (err){
+        if (err) {
+            res.status=400
+            res.send({"status":400,"Mensaje":"Error al registrarse.","Detalles":err.message})
+        }else{
+            res.status=200
+            res.send({"status":200,"Mensaje":"Usuario registrado con exito."})
+        }
+    })
+})
 
 //Login de usuario
 app.post('/login', function(req,res){
