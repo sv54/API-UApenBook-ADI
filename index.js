@@ -366,7 +366,7 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
     var token = mw.getTokenFromAuthHeader(req)
     var payload = jwt.decode(token,config.SECRET)
 
-    if(payload.admin){
+    if(payload.admin || payload.id == idUser){
         var sql = `SELECT * FROM users WHERE id = ` + idUser;
         
 
