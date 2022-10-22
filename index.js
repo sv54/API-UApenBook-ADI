@@ -395,10 +395,6 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
         }
     });
 
-
-
-    
-
 })
 
 

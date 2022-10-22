@@ -1,0 +1,213 @@
+FORMAT: 1A
+HOST: https://uapenbook/
+
+# UApenBook
+
+Es un simple API que permite hacer operaciones CRUD sobre los libros. Ademas permite listar, añadir y borrar usuarios.
+
+## All Books [/books]
+
+### Lista todos libros [GET]
+
+Se debe incluir el numero de y el tamaño de la paginacion: 
+localhost:3000/books?page=1&pageSize=4
+
++ Response 200 (application/json)
+
+        
+        {
+            "status": 200,
+            "pages": {
+                "nextURL": "/books?page=2&pageSize=4",
+                "prevURL": ""
+            },
+            "Libros en total": 11,
+            "Libros en esta pagina": 4,
+            "Libros": []
+        }
+        
+## One Book [/books/{id}]  
+
++ Parameters
+
+    + id: 1 (number) - An unique identifier of the message.
+        
+### Obtener un Libro [GET]
+
+Obtener un libro segun su id
+
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "libro": [
+                {
+                    "id": 24,
+                    "name": "Nuevo libro",
+                    "year": 1983,
+                    "language": "Ingles",
+                    "description": "Descripcion de un libro",
+                    "cover": null,
+                    "pdf": null,
+                    "author": null
+                }
+            ]
+        }
+
+### Añadir Libro [POST]
+
+Se puede añadir tu propio libro pasando un objeto JSON. Datos name, language y description son obligatorios.
+
++ Request (application/json)
+
+        {
+            "name": "Nuevo libro",
+            "language" : "Ingles",
+            "year" : "1983",
+            "description": "Descripcion de un libro"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "status code": 201,
+                "message:": "Libro ha sido creado",
+                "id": 24
+            }
+            
+            
+            
+            
+### Borrar Libro [DELETE]
+
+Borramos libro segun su id
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "Mensaje": "Libro con id " + id + " borrado."
+        }
+
+### Modificar Libro [PATCH]
+
++ Request (application/json)
+
+        {
+            "name": "Nuevo libro Modificado",
+            "language" : "Ingles",
+            "year" : "1983",
+            "description": "Descripcion de un libro",
+            "cover": "cover",
+            "pdf": "pdfPath"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "Mensaje": "Libro con id 29 modificado."
+        }
+
+
+## Login [/login]
+
+### Login [POST]
+
+Hacemos login enviando el email y la contraseña. Si todo es correcto se enviara el token jwt.
+
++ Request (application/json)
+    
+        {
+            "email": "user1@ua",
+            "password" : "12345"
+        }
+
++ Response 201 (application/json)
+    
+        {
+            "mensaje": "OK",
+            "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InVzZXIxQHVhIiwicGFzc3dvcmQiOiIxMjM0NSJ9.0NNdnuf55fBjuO4gKioYKRV-2JdE1br1SuT1EOyEtc8"
+        }
+
+## Usuarios [/users]
+
+### Obtener Todo Usuarios [GET]
+
+Obtenemos a todos los usuarios. Para futuras peticiones se va a quitar el campo de password o se mostrara un hash.
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "users": [
+                {
+                    "id": 1,
+                    "name": "Juarry",
+                    "email": "user1@ua",
+                    "avatar": "potter.png",
+                    "password": "12345",
+                    "admin": 0
+                },
+                {
+                    "id": 2,
+                    "name": "Admin",
+                    "email": "admin@ua",
+                    "avatar": "dumbledore.png",
+                    "password": "12345",
+                    "admin": 1
+                }
+            ]
+        }
+
+## Un Usuario [/users/{id}]
+
++ Parameters
+
+    + id: 1 (number) - An unique identifier of the message.
+
+
+### Obtener Un Usuarios [GET]
+
+Hacemos request para obtener un usuario segun su id.
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "user": [
+                {
+                    "id": 1,
+                    "name": "Juarry",
+                    "email": "user1@ua",
+                    "avatar": "potter.png",
+                    "password": "12345",
+                    "admin": 0
+                }
+            ]
+        }
+        
+
+### Borrar Un Usuarios [DELETE]
+
+Hacemos request para borrar un usuario segun su id.
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "Mensaje": "Usuario con id " + idUser + " borrado."
+        }
+
+
+
+
+
+
