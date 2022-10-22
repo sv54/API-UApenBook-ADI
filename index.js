@@ -59,6 +59,7 @@ app.get('/', function (req, res) {
 
 app.post('/single', upload.single('image'), (req, res) => {
     console.log(req.file);
+    res.statusCode = 201
     res.send("Single File upload success")
 });
 
@@ -68,8 +69,6 @@ app.post('/single', upload.single('image'), (req, res) => {
 
 
 //Obtenemos todos los libros de la BD
-//Falta por hacer:
-//paginacion --> Obtener x libros por cada pagina
 //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
@@ -125,9 +124,6 @@ app.get('/books', function (req, res) {
             results.status=200
             res.send(results)
         }
-        // rows.forEach((row) => {
-        //     console.log(row);
-        // });
         
     });
     db.close()
