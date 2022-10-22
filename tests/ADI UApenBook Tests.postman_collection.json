@@ -59,7 +59,9 @@
 							"pm.test(\"Status code is 200\", function (){\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"console.log(jsonData.Libros[0].name)\r",
 							"pm.test(\"Contains Harry Potter 1: La academia\", function () {\r",
 							"    pm.expect(jsonData.Libros[0].name).to.equal(\"Harry Potter 1: La academia\");\r",
 							"});\r",
@@ -143,7 +145,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Nuevo libro\",\r\n    \"language\" : \"Ingles\",\r\n    \"year\" : \"1983\",\r\n    \"description\": \"Descripcion de un libro\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Nuevo libro\",\r\n    \"language\" : \"Ingles\",\r\n    \"year\" : \"1983\",\r\n    \"description\": \"Descripcion de un libro\"\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -165,6 +167,19 @@
 		},
 		{
 			"name": "localhost:3000/books/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PATCH",
 				"header": [
@@ -349,7 +364,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete Sin Authorization (403)",
+			"name": "Delete Sin Authorization (401)",
 			"event": [
 				{
 					"listen": "test",
@@ -380,6 +395,50 @@
 						{
 							"key": "id",
 							"value": "{{idBuscado}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Libro que no le pertenece (403)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/books/:id",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "6"
 						}
 					]
 				}
@@ -425,6 +484,49 @@
 							"key": "id",
 							"value": "{{idBuscado}}"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Login Admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"token\", \"Bearer \" + jsonData.jwt);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@ua\",\r\n    \"password\" : \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
 					]
 				}
 			},
