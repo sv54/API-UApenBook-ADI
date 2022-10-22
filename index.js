@@ -113,7 +113,7 @@ app.get('/books/:id', function (req, res) {
 
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
-        console.log(row)
+        //console.log(row)
 
         if (JSON.stringify(row) == "[]" || row == undefined) {
             res.statusCode = 404
@@ -135,8 +135,11 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var message = "Libro ha sido creado"
     var b = req.body
 
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
+
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
-        [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author], function (err) {
+        [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, payload.id], function (err) {
             if (err) {
                 message = err.message;
                 status = 400
@@ -180,8 +183,8 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
 
                 });
             }else{
-                res.statusCode = 401
-                res.send({status:401, "Mensaje": "No tienes permiso para borrar este libro."})
+                res.statusCode = 403
+                res.send({status:403, "Mensaje": "No tienes permiso para borrar este libro."})
             }
         }
     });
@@ -200,9 +203,10 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
             res.statusCode = 404
-            res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
+            res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
         }
         else {
+            
             if(row[0].user_id == payload.id || payload.admin){
 
                 sql = 'UPDATE books SET name = "' + b.name + '", year =' + b.year + ', language ="' + b.language +
@@ -223,14 +227,14 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
                         res.send({ "status": 404, "message": err });
 
                     } else {
-                        res.statusCode = 404
+                        res.statusCode = 200
                         res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
                     }
 
                 });
             }else{
-                res.statusCode = 401
-                res.send({status:401, "Mensaje": "No tienes permiso para modificar este libro."})
+                res.statusCode = 403
+                res.send({status:403, "Mensaje": "No tienes permiso para modificar este libro."})
             }
         }
 

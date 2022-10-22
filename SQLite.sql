@@ -36,11 +36,11 @@ INSERT INTO users (name,email,avatar,password,admin) VALUES('Marcos', 'marcos@ua
 INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 1: La academia', 'Español', 'La academia',1);
 INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 2: El legado', 'Español', 'El legado',1);
 INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 3: La piedra', 'Español', 'La piedra',1);
-INSERT INTO books (name, language, description) VALUES('Harry Potter 4: La camara', 'Español', 'La camara');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 5: El prisionero', 'Español', 'Ya tu sabs');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 6: Las reliquias 1', 'Español', 'Las reliquias 1');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 7: Las reliquias 2', 'Español', 'Las reliquias 2');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 8: Las reliquias 3', 'Español', 'Las reliquias 3');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 9: Las reliquias 4', 'Español', 'Las reliquias 4');
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 4: La camara', 'Español', 'La camara', 3);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 5: El prisionero', 'Español', 'Ya tu sabs', 3);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 6: Las reliquias 1', 'Español', 'Las reliquias 1', 3);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 7: Las reliquias 2', 'Español', 'Las reliquias 2', 3);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 8: Las reliquias 3', 'Español', 'Las reliquias 3', 3);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 9: Las reliquias 4', 'Español', 'Las reliquias 4', 3);
 INSERT INTO books (name, language, description) VALUES('Harry Potter 10: Bestias', 'Español', 'Bestias');
 INSERT INTO books (name, language, description) VALUES('Harry Potter 11: Bestias 2', 'Español', 'Bestias 2');

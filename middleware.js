@@ -8,12 +8,12 @@ var jwt = require('jwt-simple')
 function getTokenFromAuthHeader(pet) {
   var cabecera = pet.header('Authorization')
   if (cabecera) {
-      //Parte el string por el espacio. Si está, devolverá un array de 2
-      //la 2ª pos será lo que hay detrás de "Bearer"
-      var campos = cabecera.split(' ')
-      if (campos.length>1 && cabecera.startsWith('Bearer')) {
-          return campos[1]
-      }
+		//Parte el string por el espacio. Si está, devolverá un array de 2
+		//la 2ª pos será lo que hay detrás de "Bearer"
+		var campos = cabecera.split(' ')
+		if (campos.length>1 && cabecera.startsWith('Bearer')) {
+			return campos[1]
+		}
   }
   return undefined
 }
@@ -39,7 +39,6 @@ exports.checkJWT = function checkJWT(pet,resp,next){
     }
     else {
         resp.statusCode = 401
-        resp.send({mensaje: "No tienes permiso.",
-    code:401 })
+        resp.send({mensaje: "No tienes permiso.", code:401 })
     }
 }
