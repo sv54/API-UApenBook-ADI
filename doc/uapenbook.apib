@@ -137,6 +137,30 @@ Hacemos login enviando el email y la contraseña. Si todo es correcto se enviara
             "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InVzZXIxQHVhIiwicGFzc3dvcmQiOiIxMjM0NSJ9.0NNdnuf55fBjuO4gKioYKRV-2JdE1br1SuT1EOyEtc8"
         }
 
+## Registro [/register]
+
+### Registro [POST]
+
+Registramos un nuevo usuario introduciendo sus datos.
+
++ Request (application/json)
+    
+        {
+            "name":"Pedro",
+            "email":"pedro@ua",
+            "avatar":"pedro.png",
+            "password":"12345",
+            "admin":false
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": 200,
+            "Mensaje": "Usuario registrado con exito."
+        }
+
+
 ## Usuarios [/users]
 
 ### Obtener Todo Usuarios [GET]
