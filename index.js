@@ -24,28 +24,13 @@ var fileStoregeEngine = multer.diskStorage({
 const upload = multer({storage: fileStoregeEngine});
 
 
-// Usar db.close() para cerrar la conexion
-// Info sobre sqlite y nodeJs
-// https://www.sqlitetutorial.net/sqlite-nodejs/
-
-//SQL Query
-// var sql = ('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
-// db.run(sql)
-// db.run('INSERT INTO books (name, language, description) VALUES(?, ?, ?)', ['Harry Potter', 'Spanish', 'Pues eso'], function(err){
-//     if (err) {
-//         return console.log(err.message);
-//       }
-//       // get the last insert id
-//     console.log(`A row has been inserted with rowid ${this.lastID}`);
-// })
-// db.close((err) => {
-//     if (err) {
-//       console.error(err.message);
-//     }
-//     console.log('Close the database connection.');
-//   });
-// console.log(db.run('SELECT * FROM books'))
-// db.close
+//Abrimos conexion a la base de datos
+let db = new sqlite3.Database('DataBase.db', (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    //console.log('Connected to the SQlite database.');
+});
 
 
 //Home
@@ -53,7 +38,6 @@ app.get('/', function (req, res) {
     res.redirect('/books')
     //redireccionamos a la pagina principal /books
 })
-
 
 
 
@@ -72,12 +56,6 @@ app.post('/single', upload.single('image'), (req, res) => {
 //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
 
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):0;
     const page = req.query.page ? parseInt(req.query.page):0;
@@ -126,18 +104,13 @@ app.get('/books', function (req, res) {
         }
         
     });
-    db.close()
+    
 });
 
 //Obtenemos un libro en concreto, pasandole id
 app.get('/books/:id', function (req, res) {
     const idLibro = req.params.id
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
@@ -152,7 +125,7 @@ app.get('/books/:id', function (req, res) {
             res.send({ "status": 200, "libro": row })
         }
     });
-    db.close()
+    
 
 })
 
@@ -165,12 +138,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var message = "Libro ha sido creado"
     var b = req.body
 
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     //Aqui comprobar si el usuario esta autorizado a hacer la petcion primero (esta logeado)
     //res.send({"status": 401, "message" : "User must be logged in"});
@@ -185,9 +153,9 @@ app.post('/books', mw.checkJWT, function (req, res) {
             //console.log(`A row has been inserted with rowid ${this.lastID}`);
             res.statusCode = status
             res.send({ "status code": status, "message:": message, "id": this.lastID })
-        });
+    });
 
-    db.close()
+    
 })
 
 //Eliminar un libro
@@ -195,12 +163,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
 //Comprobacion de si el usuario esta logeado y tiene permisos
 app.delete('/books/:id', mw.checkJWT, function(req, res){
     const idLibro = req.params.id
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     //Comprobar si el usuario esta autorizado a hacer delete primero!
     //Debe ser usuario que ha subido el libro o administrador
@@ -236,7 +199,7 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
 
 
 
-    db.close()
+    
 
 })
 
@@ -247,12 +210,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
     const idLibro = req.params.id
     var b = req.body
 
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     //Comprobar si el usuario esta autorizado a hacer la peticion primero!
     //res.send({"status": 403, "message" : "Forbidden"});
@@ -294,7 +252,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
     });
 
 
-    db.close()
+    
 
 })
 
@@ -302,12 +260,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
 //Login de usuario
 app.post('/login', function(req,res){
 
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     var email = req.body.email
     var password = req.body.password
@@ -363,12 +316,7 @@ app.get('/users', mw.checkJWT, function (req, res) {
     //Comprobar si el usuario logeado es admin!
     //res.send({"status": 403, "message" : "Forbidden"});
 
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     
 
@@ -384,7 +332,7 @@ app.get('/users', mw.checkJWT, function (req, res) {
         }
 
     });
-    db.close()
+    
 });
 
 //Obtenemos un usuario segun su id
@@ -394,12 +342,7 @@ app.get('/users/:id', mw.checkJWT, function (req, res) {
     //res.send({"status": 403, "message" : "Forbidden"});
 
     const idLibro = req.params.id
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
     let sql = `SELECT * From users WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
@@ -412,7 +355,7 @@ app.get('/users/:id', mw.checkJWT, function (req, res) {
             res.send({ "status": 200, "user": row })
         }
     });
-    db.close()
+    
 
 })
 
@@ -424,12 +367,7 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
     //
 
     const idUser = req.params.id
-    let db = new sqlite3.Database('DataBase.db', (err) => {
-        if (err) {
-            return console.error(err.message);
-        }
-        //console.log('Connected to the SQlite database.');
-    });
+    
 
 
     //Comprobamos que el libro existe
@@ -459,7 +397,7 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
 
 
 
-    db.close()
+    
 
 })
 
