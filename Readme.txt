@@ -8,7 +8,7 @@ Requisitos adicionales:
 
 2) En la carpeta tests se encuentra el archivo Postman que hay que importar. Contiene las llamadas y los tests asociados a cada llamada. 
 
-3) -- [Documentación]
+3) En la carpeta doc se encuentra docuementacion con las peticiones implementadas. Hecho en https://app.apiary.io/ que es una herramienta de https://apiblueprint.org/
 
 4) Se ha implementado un método muy sencillo que guarda los archivos a la carpeta uploads. El archivo de Postman carga crea una copia de index.js, pero se pueden subir otros tipos de archivo. La ruta para hacer la petición es /single.
 
