@@ -25,19 +25,17 @@ CREATE TABLE IF NOT EXISTS books(
     cover TEXT , 
     pdf TEXT,
     author INTEGER,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (author) REFERENCES author(id));
-
-CREATE TABLE IF NOT EXISTS images(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL);
-
 
 INSERT INTO users (name,email,avatar,password,admin) VALUES('Juarry', 'user1@ua', 'potter.png','12345',false);
 INSERT INTO users (name,email,avatar,password,admin) VALUES('Admin', 'admin@ua', 'dumbledore.png','12345',true);
+INSERT INTO users (name,email,avatar,password,admin) VALUES('Marcos', 'marcos@ua', 'python.png','12345',false);
 
-INSERT INTO books (name, language, description) VALUES('Harry Potter 1: La academia', 'Español', 'La academia');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 2: El legado', 'Español', 'El legado');
-INSERT INTO books (name, language, description) VALUES('Harry Potter 3: La piedra', 'Español', 'La piedra');
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 1: La academia', 'Español', 'La academia',1);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 2: El legado', 'Español', 'El legado',1);
+INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 3: La piedra', 'Español', 'La piedra',1);
 INSERT INTO books (name, language, description) VALUES('Harry Potter 4: La camara', 'Español', 'La camara');
 INSERT INTO books (name, language, description) VALUES('Harry Potter 5: El prisionero', 'Español', 'Ya tu sabs');
 INSERT INTO books (name, language, description) VALUES('Harry Potter 6: Las reliquias 1', 'Español', 'Las reliquias 1');

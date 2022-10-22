@@ -56,7 +56,6 @@ app.post('/single', upload.single('image'), (req, res) => {
 //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
-
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):0;
     const page = req.query.page ? parseInt(req.query.page):0;
     const startIndex = (page-1)*pageSize;
@@ -131,19 +130,12 @@ app.get('/books/:id', function (req, res) {
 
 
 //publicamos un libro
-//Falta por hacer
-//Comprobacion de si el usuario esta logeado y tiene permisos
 app.post('/books', mw.checkJWT, function (req, res) {
     var status = 201
     var message = "Libro ha sido creado"
     var b = req.body
 
-    
-
-    //Aqui comprobar si el usuario esta autorizado a hacer la petcion primero (esta logeado)
-    //res.send({"status": 401, "message" : "User must be logged in"});
-
-    db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author) VALUES(?,?,?,?,?,?,?)`,
+    db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
         [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author], function (err) {
             if (err) {
                 message = err.message;
@@ -159,22 +151,14 @@ app.post('/books', mw.checkJWT, function (req, res) {
 })
 
 //Eliminar un libro
-//Falta por hacer
-//Comprobacion de si el usuario esta logeado y tiene permisos
 app.delete('/books/:id', mw.checkJWT, function(req, res){
     const idLibro = req.params.id
     
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
 
-    //Comprobar si el usuario esta autorizado a hacer delete primero!
-    //Debe ser usuario que ha subido el libro o administrador
-    //res.send({"status": 403, "message" : "Forbidden"});
-    //
-
-    //Comprobamos que el libro existe
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
-
-    
 
     db.all(sql, [], (err, row) => {
         if (JSON.stringify(row) == "[]") {
@@ -182,41 +166,35 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
-            sql = `DELETE FROM books WHERE id = ` + idLibro;
-            db.all(sql, [], (err, row) => {
-                if (err) {
-                    res.statusCode = 500
-                    res.send({ "status": 500, "message": "Error al eliminar libro" });
+            if(row[0].user_id == payload.id || row[0].admin){
+                sql = `DELETE FROM books WHERE id = ` + idLibro;
+                db.all(sql, [], (err, row) => {
+                    if (err) {
+                        res.statusCode = 500
+                        res.send({ "status": 500, "message": "Error al eliminar libro" });
 
-                } else {
-                    res.statusCode = 200
-                    res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
-                }
+                    } else {
+                        res.statusCode = 200
+                        res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
+                    }
 
-            });
+                });
+            }else{
+                res.statusCode = 401
+                res.send({status:401, "Mensaje": "No tienes permiso para borrar este libro."})
+            }
         }
     });
-
-
-
-    
-
 })
 
 //Modificamos un libro existente
-//Falta por hacer
-//Comprobacion de si el usuario esta logeado y tiene permisos
 app.patch('/books/:id', mw.checkJWT, function (req, res) {
     const idLibro = req.params.id
     var b = req.body
 
-    
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
 
-    //Comprobar si el usuario esta autorizado a hacer la peticion primero!
-    //res.send({"status": 403, "message" : "Forbidden"});
-    //
-
-    //Comprobamos que el libro existe
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
     db.all(sql, [], (err, row) => {
@@ -225,47 +203,47 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
-            sql = 'UPDATE books SET name = "' + b.name + '", year =' + b.year + ', language ="' + b.language +
-                '", description ="' + b.description + '", cover ="' + b.cover + '",pdf ="' + b.pdf + '"';
-            if (Number.isInteger(b.author)){
-                sql = sql + ',author =' + b.author
-            }
-            else{
-                sql = sql + ',author = NULL'
-            }
-            sql = sql  + ' WHERE id =' + idLibro
+            if(row[0].user_id == payload.id || payload.admin){
 
-            
-
-            db.all(sql, [], (err, row) => {
-                if (err) {
-                    res.statusCode = 404
-                    res.send({ "status": 404, "message": err });
-
-                } else {
-                    res.statusCode = 404
-                    res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
+                sql = 'UPDATE books SET name = "' + b.name + '", year =' + b.year + ', language ="' + b.language +
+                    '", description ="' + b.description + '", cover ="' + b.cover + '",pdf ="' + b.pdf + '"';
+                if (Number.isInteger(b.author)){
+                    sql = sql + ',author =' + b.author
                 }
+                else{
+                    sql = sql + ',author = NULL'
+                }
+                sql = sql  + ' WHERE id =' + idLibro
 
-            });
+                
+
+                db.all(sql, [], (err, row) => {
+                    if (err) {
+                        res.statusCode = 404
+                        res.send({ "status": 404, "message": err });
+
+                    } else {
+                        res.statusCode = 404
+                        res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
+                    }
+
+                });
+            }else{
+                res.statusCode = 401
+                res.send({status:401, "Mensaje": "No tienes permiso para modificar este libro."})
+            }
         }
+
     });
-
-
-    
-
 })
 
 
 //Login de usuario
 app.post('/login', function(req,res){
-
-    
-
     var email = req.body.email
     var password = req.body.password
 
-    var sql = `SELECT password FROM users WHERE email='`+[email]+`'`;
+    var sql = `SELECT password,id,admin FROM users WHERE email='`+[email]+`'`;
     db.all(sql, function(err,rows){
 
     if(!err){
@@ -277,8 +255,10 @@ app.post('/login', function(req,res){
         }else{
             if(rows[0].password == password){
                 var payload = {
+                    id: rows[0].id,
                     login:email,
-                    password:password
+                    password:password,
+                    admin:rows[0].admin
                 }
     
                 var token = jwt.encode(payload,config.SECRET)
@@ -312,88 +292,89 @@ app.post('/login', function(req,res){
 
 //Obtener todos los usuarios de la BD
 app.get('/users', mw.checkJWT, function (req, res) {
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
 
-    //Comprobar si el usuario logeado es admin!
-    //res.send({"status": 403, "message" : "Forbidden"});
+    if(payload.admin){
+        let sql = `SELECT * From users`;
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                res.statusCode = 500
+                res.send({ "status": 500, "error": err });
+            }
+            else{
+                res.statusCode = 200
+                res.send({ "status": 200, "users": rows })
+            }
 
-    
-
-    
-
-    let sql = `SELECT * From users`;
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-            res.statusCode = 500
-            res.send({ "status": 500, "error": err });
-        }
-        else{
-            res.statusCode = 200
-            res.send({ "status": 200, "users": rows })
-        }
-
-    });
-    
+        });
+    }else{
+        res.statusCode=403
+        res.send({"status":403, "Mensaje": "Forbidden"})
+    }
 });
 
 //Obtenemos un usuario segun su id
 app.get('/users/:id', mw.checkJWT, function (req, res) {
-
-    //Comprobar si el usuario logeado es admin!
-    //res.send({"status": 403, "message" : "Forbidden"});
-
-    const idLibro = req.params.id
+    const idUser = req.params.id
     
-
-    let sql = `SELECT * From users WHERE id = ` + idLibro;
-    db.all(sql, [], (err, row) => {
-        if (JSON.stringify(row) == "[]") {
-            res.statusCode = 404
-            res.send({ "status": 404, "message": "El user no existe o ya ha sido eliminado" });
-        }
-        else{
-            res.statusCode = 200
-            res.send({ "status": 200, "user": row })
-        }
-    });
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
     
+    if(payload.admin || payload.id == idUser){
+        let sql = `SELECT * From users WHERE id = ` + idUser;
+        db.all(sql, [], (err, row) => {
+            if (JSON.stringify(row) == "[]") {
+                res.statusCode = 404
+                res.send({ "status": 404, "message": "El user no existe o ya ha sido eliminado" });
+            }
+            else{
+                res.statusCode = 200
+                res.send({ "status": 200, "user": row })
+            }
+        });
+    }else{
+        res.statusCode=403
+        res.send({"status":403, "Mensaje": "Forbidden"})
+    }
+
 
 })
 
 app.delete('/users/:id', mw.checkJWT, function(req, res){
-
-    //Comprobar si el usuario esta autorizado a hacer delete primero!
-    //Debe ser usuario que ha subido el libro o administrador
-    //res.send({"status": 403, "message" : "Forbidden"});
-    //
-
     const idUser = req.params.id
     
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
 
+    if(payload.admin){
+        var sql = `SELECT * FROM users WHERE id = ` + idUser;
+        
 
-    //Comprobamos que el libro existe
-    var sql = `SELECT * FROM users WHERE id = ` + idUser;
-    
+        db.all(sql, [], (err, row) => {
+            if (JSON.stringify(row) == "[]") {
+                res.statusCode = 404
+                res.send({ "status": 404, "message": "El usuario no existe o ya ha sido eliminado" });
+            }
+            else {
+                sql = `DELETE FROM users WHERE id = ` + idUser;
+                db.all(sql, [], (err, row) => {
+                    if (err) {
+                        res.statusCode = 500
+                        res.send({ "status": 500, "message": "Error interno al eliminar usuario" });
 
-    db.all(sql, [], (err, row) => {
-        if (JSON.stringify(row) == "[]") {
-            res.statusCode = 404
-            res.send({ "status": 404, "message": "El usuario no existe o ya ha sido eliminado" });
-        }
-        else {
-            sql = `DELETE FROM users WHERE id = ` + idUser;
-            db.all(sql, [], (err, row) => {
-                if (err) {
-                    res.statusCode = 500
-                    res.send({ "status": 500, "message": "Error interno al eliminar usuario" });
+                    } else {
+                        res.statusCode = 200
+                        res.send({ status: 200, "Mensaje": "Usuario con id " + idUser + " borrado." })
+                    }
 
-                } else {
-                    res.statusCode = 200
-                    res.send({ status: 200, "Mensaje": "Usuario con id " + idUser + " borrado." })
-                }
-
-            });
-        }
-    });
+                });
+            }
+        });
+    }else{
+        res.statusCode=403
+        res.send({"status":403, "Mensaje": "Forbidden"})
+    }
 
 })
 
