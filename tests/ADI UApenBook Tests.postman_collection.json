@@ -164,6 +164,46 @@
 			"response": []
 		},
 		{
+			"name": "localhost:3000/books/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nuevo libro Modificado\",\r\n    \"language\" : \"Ingles\",\r\n    \"year\" : \"1983\",\r\n    \"description\": \"Descripcion de un libro\",\r\n    \"cover\": \"cover\",\r\n    \"pdf\": \"pdfPath\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/books/:id",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{idBuscado}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Libro",
 			"event": [
 				{
@@ -174,9 +214,9 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Contains Nuevo libro\", function () {\r",
+							"pm.test(\"Contains Nuevo libro Modificado\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.libro[0].name).to.equal(\"Nuevo libro\");\r",
+							"    pm.expect(jsonData.libro[0].name).to.equal(\"Nuevo libro Modificado\");\r",
 							"});\r",
 							""
 						],
