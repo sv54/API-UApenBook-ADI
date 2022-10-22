@@ -19,7 +19,7 @@ exports.checkJWT = function checkJWT(pet,resp,next){
         next()
     }
     else {
-        resp.status(403)
+        resp.statusCode = 401
         resp.send({mensaje: "No tienes permiso.",
     code:401 })
     }
