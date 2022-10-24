@@ -42,7 +42,6 @@ app.get('/', function (req, res) {
 
 
 app.post('/single', upload.single('image'), (req, res) => {
-    //console.log(req.file);
     res.statusCode = 201
     res.send("Single File upload success")
 });
