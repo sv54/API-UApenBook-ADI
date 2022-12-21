@@ -1,10 +1,54 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
+import {ClienteAPI} from '../ClienteAPI'
 import HelloWorld from './components/HelloWorld.vue'
+import Handlebars from "handlebars"
+
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+
+var app_plantilla = `
+<h1>Lista de la compra</h1>
+<input type="text" id="nuevoItem"><button id="botonInsertar">Insertar</button>
+<ul id="lista">
+   {{#each .}} 
+    <li id="{{id}}" {{#comprado}}class="tachado"{{/comprado}}>
+    {{nombre}}
+    <button id="{{id}}_button">Eliminar</button>
+    </li>
+   {{/each}} 
+</ul>
+`
+
+document.addEventListener('DOMContentLoaded', async function() {
+    var cliente = new ClienteAPI()
+    // var lista = await cliente.getItems()
+    var lista = {id:1, nombre:"pan", comprado:true}
+    var func_plantilla = Handlebars.compile(app_plantilla)
+    this.document.getElementById('app').innerHTML = func_plantilla(lista)
+    
+    
+    document.getElementById('lista').addEventListener('click', function(evento){
+        var id_target = evento.target.id
+        if (evento.target.nodeName=="BUTTON") {
+            var id_borrar = parseInt(evento.target.id)
+        }
+
+
+    })
+})
+
+
 </script>
 
 <template>
-  <header>
+
+  <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
@@ -15,10 +59,15 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
+    <button @click="count++">Count is: {{ count }}</button>
+    
   </header>
 
-  <RouterView />
+  <RouterView /> -->
 </template>
+
+
+
 
 <style scoped>
 header {
