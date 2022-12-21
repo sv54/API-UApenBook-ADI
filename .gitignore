@@ -1,8 +1,32 @@
-node_modules
-build
-npm-debug.log
-.nyc
-.env
-.DS_Store
-DataBase.db
-uploads
+client/.DS_Store
+client/node_modules/
+client/dist/
+client/
+# local env files
+client/.env.local
+client/.env.*.local
+client/
+# Log files
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/
+# Editor directories and files
+client/.idea
+client/.vscode
+client/*.suo
+client/*.ntvs*
+client/*.njsproj
+client/*.sln
+client/*.sw*
+
+
+
+server/node_modules
+server/build
+server/npm-debug.log
+server/.nyc
+server/.env
+server/.DS_Store
+server/DataBase.db
+server/uploads
