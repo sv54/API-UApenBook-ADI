@@ -11,6 +11,7 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
+client/package-lock.json
 # Editor directories and files
 
 client/.vscode
