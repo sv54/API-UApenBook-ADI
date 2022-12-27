@@ -10,6 +10,9 @@ var moment = require('moment')
 const config = require('./config.js');
 var multer = require('multer');
 var mw = require('./middleware.js');
+const cors = require('cors')
+
+app.use(cors())
 
 
 var fileStoregeEngine = multer.diskStorage({
@@ -98,10 +101,13 @@ app.get('/books', function (req, res) {
             }
 
             results.status=200
+            console.log(results)
             res.send(results)
         }
         
     });
+
+    
     
 });
 
