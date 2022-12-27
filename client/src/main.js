@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import {ClienteAPI} from './ClienteAPI'
+
 
 
 import App from './App.vue'
@@ -15,4 +15,6 @@ app.use(router)
 
 app.mount('#app')
 
+
+console.log("Vue  Prueba")
 
