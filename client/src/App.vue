@@ -22,23 +22,56 @@ export default {
 
 
 <template>
-    <header>
-        <div class="wrapper">
-            <p>{{ name }}</p>
-            <p>{{ books }}</p>
-            <RouterLink to="/profile">Perfil</RouterLink>
-            <br>
-            <RouterLink to="/">Home</RouterLink>
+    <div>
+        <header>
+            <div class="wrapper">
+                <div class = "logo">
+                    <p>{{ name }}</p>
+                </div>
+                <div class="headerLinks">
+                    <RouterLink to="/profile">Perfil</RouterLink>
+                </div>
+                <div class="headerLinks">
+                    <RouterLink to="/">Home</RouterLink>
+                </div>    
+                
 
-        </div>
-        <RouterView />
+                
+            </div>
+        
+        </header>
+        <body>
+            <div>
+                <p>{{ books }}</p>
+                <p>Body!</p>
+                <RouterView />
+
+            </div>
+        </body>
+        <footer>
+            <div>
+                <p>Footer!</p>
+            </div>
+        </footer>
+
+    </div>
     
-    </header>
-
 
 
 </template>
 
 <style scoped>
+
+.headerLinks{
+    margin: auto;
+    padding: 2%;
+    display: inline;
+}
+.logo{
+    margin: auto;
+    display: inline;
+
+}
+
 
 </style>
