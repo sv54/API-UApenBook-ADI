@@ -4,6 +4,7 @@ import { ClienteAPI } from '../ClienteAPI'
 import { RouterLink, RouterView } from 'vue-router'
 
 import ProfileView from './components/ProfileView.vue'
+import FooterPart from './components/FooterPart.vue'
 
 const api = new ClienteAPI;
 var books = await api.getItems()
@@ -17,6 +18,7 @@ export default {
             books: books
         };
     },
+    components: {FooterPart}
 };
 </script>
 
@@ -49,9 +51,7 @@ export default {
             </div>
         </body>
         <footer>
-            <div>
-                <p>Footer!</p>
-            </div>
+            <FooterPart />
         </footer>
 
     </div>
