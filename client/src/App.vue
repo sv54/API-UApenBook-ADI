@@ -1,9 +1,12 @@
 <script>
 
 import { ClienteAPI } from '../ClienteAPI'
+import { RouterLink, RouterView } from 'vue-router'
+
+import ProfileView from './components/ProfileView.vue'
 
 const api = new ClienteAPI;
-var books = api.getItems()
+var books = await api.getItems()
 console.log(books)
 
 export default {
@@ -11,6 +14,7 @@ export default {
     data(){
         return {
             name: "UApenBook",
+            books: books
         };
     },
 };
@@ -18,10 +22,19 @@ export default {
 
 
 <template>
+    <header>
+        <div class="wrapper">
+            <p>{{ name }}</p>
+            <p>{{ books }}</p>
+            <RouterLink to="/profile">Perfil</RouterLink>
+            <br>
+            <RouterLink to="/">Home</RouterLink>
 
-    <div class="container">
-        <p>{{ name }}</p>
-    </div>
+        </div>
+        <RouterView />
+    
+    </header>
+
 
 
 </template>

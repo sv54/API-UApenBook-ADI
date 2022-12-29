@@ -1,20 +1,19 @@
 export class ClienteAPI {
-    BASE_URL='http://localhost:3000/books'
+    BASE_URL='http://localhost:3000/'
 
     async getItems() {
     
-        var resp = await fetch(this.BASE_URL)
-        console.log(resp)
-        return resp
+        var resp = await fetch(this.BASE_URL + "books")
+        .then((response) => response.json());
 
+        if (resp.status == 200) {
+            return resp
 
-        // if (resp.ok) {
-        //     return resp.json()
-        // }
-        // else {
-        //     console.log(resp)
-        //     throw new Error(resp)
-        // }
+        }
+        else {
+            console.log(resp)
+            throw new Error(resp)
+        }
         
 
     }
