@@ -1,33 +1,31 @@
 <script>
+import { ClienteAPI } from "../ClienteAPI";
+import { RouterLink, RouterView } from "vue-router";
 
-import { ClienteAPI } from '../ClienteAPI'
-import { RouterLink, RouterView } from 'vue-router'
+import ProfileView from "./components/ProfileView.vue";
+import FooterPart from "./components/FooterPart.vue";
 
-import ProfileView from './components/ProfileView.vue'
-import FooterPart from './components/FooterPart.vue'
-
-const api = new ClienteAPI;
-var books = await api.getItems()
-console.log(books)
+const api = new ClienteAPI();
+var books = await api.getItems();
+console.log(books);
 
 export default {
     name: "App",
-    data(){
+    data() {
         return {
             name: "UApenBook",
-            books: books
+            books: books,
         };
     },
-    components: {FooterPart}
+    components: { FooterPart },
 };
 </script>
-
 
 <template>
     <div>
         <header>
             <div class="wrapper">
-                <div class = "logo">
+                <div class="logo">
                     <p>{{ name }}</p>
                 </div>
                 <div class="headerLinks">
@@ -35,43 +33,32 @@ export default {
                 </div>
                 <div class="headerLinks">
                     <RouterLink to="/">Home</RouterLink>
-                </div>    
-                
-
-                
+                </div>
             </div>
-        
         </header>
+
         <body>
             <div>
                 <p>{{ books }}</p>
                 <p>Body!</p>
                 <RouterView />
-
             </div>
         </body>
         <footer>
             <FooterPart />
         </footer>
-
     </div>
-    
-
-
 </template>
 
 <style scoped>
-
-.headerLinks{
+.headerLinks {
     margin: auto;
     padding: 2%;
     display: inline;
 }
-.logo{
+
+.logo {
     margin: auto;
     display: inline;
-
 }
-
-
 </style>

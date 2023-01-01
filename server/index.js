@@ -10,9 +10,15 @@ var moment = require('moment')
 const config = require('./config.js');
 var multer = require('multer');
 var mw = require('./middleware.js');
-const cors = require('cors')
+const cors = require('cors');
+const { ERROR } = require('sqlite3');
 
 app.use(cors())
+
+var todosLibros;
+
+
+
 
 
 var fileStoregeEngine = multer.diskStorage({
@@ -35,6 +41,20 @@ let db = new sqlite3.Database('DataBase.db', (err) => {
     //console.log('Connected to the SQlite database.');
 });
 
+function updateTodosLibros(){
+    let sql = 'SELECT * From books';
+
+    db.all(sql, [], (err, rows) => {
+
+        if (err) {
+            throw new Error(err.message)
+        }
+        else{
+            todosLibros = rows
+        }
+    });
+}
+
 
 //Home
 app.get('/', function (req, res) {
@@ -52,6 +72,25 @@ app.post('/single', upload.single('image'), (req, res) => {
 // app.post('/multiple', upload.array('image', 3), (req, res) => {
 //     res.send("Multiple Files uploadede")
 // });
+
+app.get('/updateTodosLibros', function(req, res){
+
+    let sql = 'SELECT * From books';
+
+    db.all(sql, [], (err, rows) => {
+
+        if (err) {
+            res.statusCode = 500
+            res.send({"status": 500, "error": err.message })
+        }
+        else{
+            todosLibros = rows
+            res.statusCode = 200
+            console.log(rows)
+            res.send({"libro": todosLibros})
+        }
+    });
+});
 
 
 //Obtenemos todos los libros de la BD
@@ -82,30 +121,39 @@ app.get('/books', function (req, res) {
 
     let sql = `SELECT * From books`;
 
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-            res.statusCode = 500
-            res.send({"status": 500, "error": err.message })
-        }
-        else{
-            res.statusCode = 200
+    var librosADevolver = todosLibros.slice(startIndex, endIndex);
+    res.status = 200
+    if(todosLibros.length<=pageSize*(page-1)+librosADevolver.length){
+        results.pages.nextURL=''
+    }
+    res.send({'Total': todosLibros.length, 'Libros': librosADevolver, 'pages': results.pages})
+    
 
-            var libros = rows.slice(startIndex,endIndex);
+    //No podemos recuperar todos los libros cada vez que realizamos una peticion
 
-            results['Libros en total']=rows.length;
-            results['Libros en esta pagina']=libros.length;
-            results['Libros']=libros;
+    // db.all(sql, [], (err, rows) => {
+    //     if (err) {
+    //         res.statusCode = 500
+    //         res.send({"status": 500, "error": err.message })
+    //     }
+    //     else{
+    //         res.statusCode = 200
 
-            if(results['Libros en total']<=pageSize*(page-1)+results['Libros en esta pagina']){
-                results.pages.nextURL=''
-            }
+    //         var libros = rows.slice(startIndex,endIndex);
+    //         results['Libros en total']=rows.length;
+    //         results['Libros en esta pagina']=libros.length;
+    //         results['Libros']=libros;
 
-            results.status=200
-            console.log(results)
-            res.send(results)
-        }
+    //         if(results['Libros en total']<=pageSize*(page-1)+results['Libros en esta pagina']){
+    //             results.pages.nextURL=''
+    //         }
+
+    //         results.status=200
+    //         console.log(results)
+    //         res.send(results)
+    //     }
         
-    });
+    // });
 
     
     
@@ -152,6 +200,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
             // get the last insert id
             //console.log(`A row has been inserted with rowid ${this.lastID}`);
             res.statusCode = status
+            updateTodosLibros();
             res.send({ "status code": status, "message:": message, "id": this.lastID })
     });
 
@@ -182,6 +231,7 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
                         res.send({ "status": 500, "message": "Error al eliminar libro" });
 
                     } else {
+                        updateTodosLibros();
                         res.statusCode = 200
                         res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
                     }
@@ -232,6 +282,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
                         res.send({ "status": 404, "message": err });
 
                     } else {
+                        updateTodosLibros();
                         res.statusCode = 200
                         res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
                     }
@@ -409,4 +460,5 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
 
 app.listen(3000, function () {
     console.log("Servidor arrancado")
+    updateTodosLibros()
 })
