@@ -21,8 +21,8 @@
         <div class="grid-container" >
             <div v-for="libro in books.Libros">
                 <div class="grid-item">
-                    {{ libro.name }}
-            
+                    <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
+                    <h6>{{ libro.name }}</h6>
                 </div>
             </div>
 
@@ -38,8 +38,13 @@
 }
 .grid-item {
   padding: 20px;
-  font-size: 30px;
+  padding-top: 10%;
   text-align: center;
 }
 
+img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
 </style>
