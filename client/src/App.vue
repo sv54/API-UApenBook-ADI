@@ -29,11 +29,7 @@ export default {
         <div>
             <RouterView />
         </div>
-        <div class="row">
-            <div class="col-10" >1</div>
-            <div class="col" >1</div>
-            <div class="col" >1</div>
-        </div>
+
     </body>
     <footer>
         <FooterPart />
@@ -42,15 +38,6 @@ export default {
 
 <style scoped>
 
-.headerLinks {
-    margin: auto;
-    padding: 2%;
-    display: inline;
-}
 
-.logo {
-    margin: auto;
-    display: inline;
-}
 
 </style>
