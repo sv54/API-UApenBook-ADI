@@ -45,8 +45,7 @@ export class ClienteAPI {
             return resp
         }
         else{
-            console.log(resp)
-            throw new Error(resp)
+            return resp
         }
         
     }

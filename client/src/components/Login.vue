@@ -1,26 +1,31 @@
 <script>
-    import { ClienteAPI } from "../../ClienteAPI";
-    export default {
+import { ClienteAPI } from "../../ClienteAPI";
+export default {
     name: "App",
     data() {
         return {
             name: "UApenBook",
             email: '',
-            password: ''
+            password: '',
+            error: false
         };
     },
-    methods:{
+    created(){
+        this.error == false
+    },
+    methods: {
         async loginFromApi() {
             console.log(this.email);
             console.log(this.password);
             const api = new ClienteAPI();
             var resp = await api.login(this.email, this.password)
+            if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
+                this.error = true
+            }
             console.log(resp)
+
         },
-        login() {
-            console.log(this.email);
-            console.log(this.password);
-        }
+
     },
 };
 
@@ -34,11 +39,12 @@
                 <input v-model="email" class="form-input" type="email" id="email" required placeholder="Email">
                 <label class="form-label" for="#password">Password:</label>
                 <input v-model="password" class="form-input" type="password" id="password" placeholder="Password">
+                <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
                 <input class="form-submit" type="submit" value="Login">
             </form>
         </div>
 
-        
+
         <!-- <form method="POST" action="" @submit.prevent="login">
             <div class="row ">
                 <div class="col"></div>
@@ -83,47 +89,54 @@ input{
 
 }
 </style> -->
-<style>
-
-
+<style scoped>
 .login {
     padding: 2rem;
-  }
-  .title {
+}
+
+.title {
     text-align: center;
-  }
-  .form {
-    margin: 3rem auto;
+}
+
+.form {
+    margin: 5rem auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 40%;
     min-width: 350px;
     max-width: 100%;
-    background: rgba(16, 51, 78, 0.9);
+    background: rgba(8, 68, 114, 0.9);
     border-radius: 5px;
-    padding: 40px;
+    padding: 2%;
     box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
-  }
-  .form-label {
-    margin-top: 2rem;
+}
+.error {
+  margin: 2% 0 0;
+  color: #ff0000;
+}
+
+.form-label {
+    margin-top: 2%;
     color: white;
     margin-bottom: 0.5rem;
-  }
-  .form-input {
-    padding: 10px 15px;
+}
+
+.form-input {
+    padding: 3% 4%;
     background: none;
     background-image: none;
     border: 1px solid white;
     color: white;
-  }
-  .form-submit {
+}
+
+.form-submit {
     background: #1ab188;
     border: none;
     color: white;
-    margin-top: 3rem;
-    padding: 1rem 0;
+    margin-top: 3%;
+    padding: 3% 0;
     cursor: pointer;
     transition: background 0.2s;
-  }
-  </style>
+}
+</style>
