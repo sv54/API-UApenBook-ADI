@@ -38,8 +38,9 @@
         <div class="grid-container" >
             <div v-for="libro in books.libros">
                 <div class="grid-item">
+                    <a :href="'/book/' + libro.id">
                     <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
-                    <a :href="'/book/' + libro.id"><h6>{{ libro.name }}</h6></a>
+                    <h6>{{ libro.name }}</h6></a>
                 </div>
             </div>
         </div>
