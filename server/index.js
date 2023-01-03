@@ -177,6 +177,7 @@ app.get('/books/:id', function (req, res) {
         }
         else{
             res.statusCode = 200
+            console.log(row)
             res.send({ "status": 200, "libro": row })
         }
     });

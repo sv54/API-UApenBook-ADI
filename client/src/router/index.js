@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import ProfileView from '../components/ProfileView.vue'
 import Login from '../components/ProfileView.vue'
+import DetailItem from '../components/DetalleItem.vue'
 
 
 const router = createRouter({
@@ -18,6 +19,11 @@ const router = createRouter({
       path: '/books/:page?',
       name: 'catalog',
       component: MainView
+    },
+    {
+      path: '/book/:id?',
+      name: 'details',
+      component: DetailItem
     },
 
     {
