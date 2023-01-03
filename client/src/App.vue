@@ -2,7 +2,6 @@
 import { ClienteAPI } from "../ClienteAPI";
 import { RouterLink, RouterView } from "vue-router";
 
-import ProfileView from "./components/ProfileView.vue";
 import FooterPart from "./components/FooterPart.vue";
 import HeaderPart from "./components/HeaderPart.vue";
 
@@ -29,7 +28,6 @@ export default {
         <div>
             <RouterView />
         </div>
-
     </body>
     <footer>
         <FooterPart />

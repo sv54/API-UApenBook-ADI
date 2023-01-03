@@ -1,9 +1,9 @@
 export class ClienteAPI {
     BASE_URL='http://localhost:3000/'
 
-    async getItems() {
-    
-        var resp = await fetch(this.BASE_URL + "books")
+    async getItems(page=1, pageSize = 8) {
+        //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
+        var resp = await fetch(this.BASE_URL + "books?page="+page+"&pageSize="+pageSize)
         .then((response) => response.json());
 
         if (resp.status == 200) {

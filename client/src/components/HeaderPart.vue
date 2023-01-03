@@ -15,7 +15,7 @@
                     </RouterLink>
                 </div>
                 <div class="headerLinks col">
-                    <RouterLink to="/">
+                    <RouterLink to="/books">
                         <h5>Home</h5>
                     </RouterLink>
                 </div>

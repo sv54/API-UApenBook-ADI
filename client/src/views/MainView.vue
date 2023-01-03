@@ -1,32 +1,55 @@
 <script>
     import { ClienteAPI } from "../../ClienteAPI";
+    
 
-    const api = new ClienteAPI();
-    var books = await api.getItems();
-    console.log(books);
 
+    //console.log(this.$route.params.page)
+    //var _books = await api.getItems();
+
+
+    
+    //var paginas = 20
     export default {
     name: "App",
     data() {
         return {
             name: "UApenBook",
-            books: books,
+            books: [],
+            numPaginas: 0,
         };
     },
+    methods:{
+        async getItemsFromAPI() {
+            const api = new ClienteAPI();
+            this.books = await api.getItems(this.$route.params.page);
+            this.numPaginas  = await Math.floor(this.books.total / this.books.pageSize) + 1
+        }
+    },
+    created(){
+        this.getItemsFromAPI()
+    },
+    
+    
 };
 </script>
 
 <template>
     <div class = "container">
         <div class="grid-container" >
-            <div v-for="libro in books.Libros">
+            <div v-for="libro in books.libros">
                 <div class="grid-item">
                     <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
                     <h6>{{ libro.name }}</h6>
                 </div>
             </div>
-
         </div>
+        <nav>
+            <div class="pagination row">
+                <span  v-for="index in numPaginas" :key="index">
+                    <li class="page-item"><a :href="'/books/' + index">{{ index }}</a></li>
+                </span>
+            </div>
+        </nav>
     </div>
 </template>
 
@@ -46,5 +69,16 @@ img{
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+
+li{
+    display: inline-block;
+    
+}
+
+.pagination{
+    text-align: center;
+    display: block;
+    padding: 2%;
 }
 </style>

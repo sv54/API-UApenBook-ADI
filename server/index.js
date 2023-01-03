@@ -97,7 +97,7 @@ app.get('/updateTodosLibros', function(req, res){
 //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
-    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):10;
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):8;
     const page = req.query.page ? parseInt(req.query.page):1;
     const startIndex = (page-1)*pageSize;
     const endIndex = page*pageSize;
@@ -129,7 +129,7 @@ app.get('/books', function (req, res) {
     console.log(todosLibros)
     console.log(librosADevolver)
 
-    res.send({'Total': todosLibros.length, 'Libros': librosADevolver, 'pages': results.pages, 'status': res.status})
+    res.send({'libros': librosADevolver,'total': todosLibros.length, 'pageSize': pageSize, 'pages': results.pages, 'status': res.status})
     
 
     //No podemos recuperar todos los libros cada vez que realizamos una peticion
