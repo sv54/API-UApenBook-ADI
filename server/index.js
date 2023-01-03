@@ -325,7 +325,7 @@ app.post('/register', function(req,res){
 app.post('/login', function(req,res){
     var email = req.body.email
     var password = req.body.password
-
+    console.log(req.body)
     var sql = `SELECT password,id,admin FROM users WHERE email='`+[email]+`'`;
     db.all(sql, function(err,rows){
 

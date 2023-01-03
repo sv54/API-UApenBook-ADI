@@ -31,6 +31,26 @@ export class ClienteAPI {
         }
     }
 
+    async login(username, password){
+        var resp = await fetch (this.BASE_URL + "login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: username, password: password})
+        })
+        .then((response) => response.json());
+
+        if(resp.status == 200){
+            return resp
+        }
+        else{
+            console.log(resp)
+            throw new Error(resp)
+        }
+        
+    }
+
     async setItemState(id, estado ) {
         var resp = await fetch(this.BASE_URL+"/"+id, {
             method:'PATCH',

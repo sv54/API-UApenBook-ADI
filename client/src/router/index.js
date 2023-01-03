@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import ProfileView from '../components/ProfileView.vue'
-import Login from '../components/ProfileView.vue'
+import Login from '../components/Login.vue'
 import DetailItem from '../components/DetalleItem.vue'
 
 
@@ -34,7 +34,7 @@ const router = createRouter({
 
     {
       path: '/login',
-      name: 'loginn',
+      name: 'login',
       component: Login
     },
 
