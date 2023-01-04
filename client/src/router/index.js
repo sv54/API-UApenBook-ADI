@@ -3,6 +3,7 @@ import MainView from '../views/MainView.vue'
 import ProfileView from '../components/ProfileView.vue'
 import Login from '../components/Login.vue'
 import DetailItem from '../components/DetalleItem.vue'
+import Register from '../components/Register.vue'
 
 
 const router = createRouter({
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
 
 

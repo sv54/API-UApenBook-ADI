@@ -24,6 +24,11 @@
                         <h5>Login</h5>
                     </RouterLink>
                 </div>
+                <div class="headerLinks col">
+                    <RouterLink to="/register">
+                        <h5>Register</h5>
+                    </RouterLink>
+                </div>
             </div>
         </div>
         <div class="col barraBusqueda">
