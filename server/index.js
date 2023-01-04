@@ -313,7 +313,7 @@ app.post('/register', function(req,res){
     db.run(`INSERT INTO users(name,email,avatar,password,admin) VALUES(?,?,?,?,?)`,[name,email,avatar,password,admin],function (err){
         if (err) {
             res.status=400
-            res.send({"status":400,"Mensaje":"Error al registrarse.","Detalles":err.message})
+            res.send({"status":400,"Mensaje":"Error al registrarse. Usuario con este email ya existe!","Detalles":err.message})
         }else{
             res.status=200
             res.send({"status":200,"Mensaje":"Usuario registrado con exito."})

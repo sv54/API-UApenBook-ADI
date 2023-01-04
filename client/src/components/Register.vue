@@ -9,20 +9,41 @@ export default {
             email: '',
             password: '',
             repeatPassword: '',
-            error: false
+            error: false,
+            errorMessage: ''
         };
     },
     created(){
-        this.error == false
+        this.error = false
+        this.errorMessage = ''
+
     },
     methods: {
-        async RegisterFromApi() {
-            console.log(this.username);
-            console.log(this.email);
-            console.log(this.password);
-            console.log(this.repeatPassword);
 
-            const api = new ClienteAPI();
+        //Falta decicidr como controlar el avatar y si el usuario es admin
+        async RegisterFromApi() {
+
+            if(this.password != this.repeatPassword){
+                this.error = true;
+                this.errorMessage = 'Las contraseñas no coinciden';
+            }
+            else{
+                const api = new ClienteAPI();
+                const resp = await api.register(this.username, this.email, this.password)
+                console.log(resp)
+                if(resp.status == 400){
+                    this.error = true;
+                    this.errorMessage = resp.Mensaje
+                    console.log(resp.Detalles)
+                }
+                //Redireccionar a otra pagina
+                if(resp.status == 200){
+                    this.$router.push("/login")
+                }
+            }
+
+
+
             
 
         },
@@ -34,7 +55,7 @@ export default {
 <template>
     <div class="container">
         <div class="login">
-            <h1 class="title">Login in the page</h1>
+            <h1 class="title">Registro de Usuarios</h1>
             <form action class="form" @submit.prevent="RegisterFromApi">
                 <label class="form-label" for="#username">Nombre de Usuario:</label>
                 <input v-model="username" class="form-input" type="text" id="username" required placeholder="Nombre de Usuario">
@@ -44,7 +65,7 @@ export default {
                 <input v-model="password" class="form-input" type="password" id="password" placeholder="Password">
                 <label class="form-label" for="#repeatPassword">Repita contraseña:</label>
                 <input v-model="repeatPassword" class="form-input" type="password" id="repeatPassword" placeholder="Password">
-                <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
+                <p v-if="error" class="error">{{ errorMessage }}</p>
                 <input class="form-submit" type="submit" value="Login">
             </form>
         </div>
