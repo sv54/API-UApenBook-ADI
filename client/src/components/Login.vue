@@ -1,4 +1,5 @@
 <script>
+import { storeKey } from "vuex";
 import { ClienteAPI } from "../../ClienteAPI";
 export default {
     name: "App",
@@ -15,15 +16,17 @@ export default {
     },
     methods: {
         async loginFromApi() {
-            console.log(this.email);
-            console.log(this.password);
-            const api = new ClienteAPI();
-            var resp = await api.login(this.email, this.password)
-            if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
+            await this.$store.dispatch('login', {
+                email: this.email,
+                password: this.password,
+            })
+            if(this.$store.state.JWT != 0){
+                this.$router.push("/books")
+            }
+            else{
                 this.error = true
             }
-            console.log(resp)
-
+            
         },
 
     },

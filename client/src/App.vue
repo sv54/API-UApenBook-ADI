@@ -23,7 +23,6 @@ export default {
 
 <template>
     <HeaderPart />
-
     <body>
         <div>
             <RouterView />

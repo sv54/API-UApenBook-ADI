@@ -237,13 +237,13 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
                     } else {
                         updateTodosLibros();
                         res.statusCode = 200
-                        res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " borrado." })
+                        res.send({ status: 200, "message": "Libro con id " + idLibro + " borrado." })
                     }
 
                 });
             }else{
                 res.statusCode = 403
-                res.send({status:403, "Mensaje": "No tienes permiso para borrar este libro."})
+                res.send({status:403, "message": "No tienes permiso para borrar este libro."})
             }
         }
     });
@@ -288,13 +288,13 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
                     } else {
                         updateTodosLibros();
                         res.statusCode = 200
-                        res.send({ status: 200, "Mensaje": "Libro con id " + idLibro + " modificado." })
+                        res.send({ status: 200, "message": "Libro con id " + idLibro + " modificado." })
                     }
 
                 });
             }else{
                 res.statusCode = 403
-                res.send({status:403, "Mensaje": "No tienes permiso para modificar este libro."})
+                res.send({status:403, "message": "No tienes permiso para modificar este libro."})
             }
         }
 
@@ -313,10 +313,10 @@ app.post('/register', function(req,res){
     db.run(`INSERT INTO users(name,email,avatar,password,admin) VALUES(?,?,?,?,?)`,[name,email,avatar,password,admin],function (err){
         if (err) {
             res.status=400
-            res.send({"status":400,"Mensaje":"Error al registrarse. Usuario con este email ya existe!","Detalles":err.message})
+            res.send({"status":400,"message":"Error al registrarse. Usuario con este email ya existe!","Detalles":err.message})
         }else{
             res.status=200
-            res.send({"status":200,"Mensaje":"Usuario registrado con exito."})
+            res.send({"status":200,"message":"Usuario registrado con exito."})
         }
     })
 })
@@ -332,7 +332,7 @@ app.post('/login', function(req,res){
     if(!err){
         if(!rows[0]){
             res.send({
-                mensaje:"Email o contraseña incorrectos.",
+                message:"Email o contraseña incorrectos.",
                 status:401
             })
         }else{
@@ -345,15 +345,16 @@ app.post('/login', function(req,res){
                 }
     
                 var token = jwt.encode(payload,config.SECRET)
-                res.statusCode = 200
+                res.status = 200
                 res.send({
-                    mensaje:"OK",
-                    jwt: token
+                    message:"OK",
+                    jwt: token,
+                    status: 200
                 })      
             }else{
-                res.statusCode = 401
+                res.status = 401
                 res.send({
-                    mensaje:"Email o contraseña incorrectos.",
+                    message:"Email o contraseña incorrectos.",
                     status:401
                 })
             }
@@ -363,7 +364,7 @@ app.post('/login', function(req,res){
         console.log(err.message)
         res.statusCode = 500
         res.send({
-            mensaje:err.message,
+            message:err.message,
             code:500
         })
     }
@@ -393,7 +394,7 @@ app.get('/users', mw.checkJWT, function (req, res) {
         });
     }else{
         res.statusCode=403
-        res.send({"status":403, "Mensaje": "Forbidden"})
+        res.send({"status":403, "message": "Forbidden"})
     }
 });
 
@@ -418,7 +419,7 @@ app.get('/users/:id', mw.checkJWT, function (req, res) {
         });
     }else{
         res.statusCode=403
-        res.send({"status":403, "Mensaje": "Forbidden"})
+        res.send({"status":403, "message": "Forbidden"})
     }
 
 
@@ -448,7 +449,7 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
 
                     } else {
                         res.statusCode = 200
-                        res.send({ status: 200, "Mensaje": "Usuario con id " + idUser + " borrado." })
+                        res.send({ status: 200, "message": "Usuario con id " + idUser + " borrado." })
                     }
 
                 });
@@ -456,7 +457,7 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
         });
     }else{
         res.statusCode=403
-        res.send({"status":403, "Mensaje": "Forbidden"})
+        res.send({"status":403, "message": "Forbidden"})
     }
 
 })
