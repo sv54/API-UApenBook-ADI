@@ -1,5 +1,22 @@
 <script>
+export default {
+    name: "App",
+    data() {
+        return {
+            
+        };
+    },
+    created(){
+    },
+    methods: {
+        async logout(){
+            await this.$store.dispatch('logout', {})
+            this.$router.push("/books")
 
+        },
+
+    },
+};
 </script>
 
 <template>
@@ -28,6 +45,10 @@
                     <RouterLink to="/register">
                         <h5>Register</h5>
                     </RouterLink>
+                </div>
+                <div class="headerLinks col ">
+                        
+                    <a class="green" @click="logout"><h5>Logout</h5></a>
                 </div>
             </div>
         </div>

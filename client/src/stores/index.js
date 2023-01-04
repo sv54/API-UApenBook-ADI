@@ -70,6 +70,9 @@ export default createStore({
         context.commit("UPDATE_status", resp.status);
       }
     },
+    async logout(context, payload){
+        context.commit('UPDATE_JWT', '')
+    }
   },
   getters: {},
 });

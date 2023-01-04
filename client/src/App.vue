@@ -23,6 +23,7 @@ export default {
 
 <template>
     <HeaderPart />
+    <p>{{ $store.state.JWT}}</p>
     <body>
         <div>
             <RouterView />

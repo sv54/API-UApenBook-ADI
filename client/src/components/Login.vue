@@ -1,6 +1,4 @@
 <script>
-import { storeKey } from "vuex";
-import { ClienteAPI } from "../../ClienteAPI";
 export default {
     name: "App",
     data() {
