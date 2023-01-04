@@ -20,6 +20,11 @@
                     </RouterLink>
                 </div>
                 <div class="headerLinks col">
+                    <RouterLink to="/book/new">
+                        <h5>Upload Book</h5>
+                    </RouterLink>
+                </div>
+                <div class="headerLinks col">
                     <RouterLink to="/login">
                         <h5>Login</h5>
                     </RouterLink>
