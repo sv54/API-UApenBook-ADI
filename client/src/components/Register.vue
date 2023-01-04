@@ -22,26 +22,30 @@ export default {
 
         //Falta decicidr como controlar el avatar y si el usuario es admin
         async RegisterFromApi() {
-
+            
             if(this.password != this.repeatPassword){
                 this.error = true;
                 this.errorMessage = 'Las contraseñas no coinciden';
             }
             else{
-                const api = new ClienteAPI();
-                const resp = await api.register(this.username, this.email, this.password)
-                console.log(resp)
-                if(resp.status == 400){
+                await this.$store.dispatch('register', {
+                    name: this.username,
+                    email: this.email,
+                    password: this.password,
+                    admin: false
+                })
+
+
+                if(this.$store.state.status == 400){
                     this.error = true;
-                    this.errorMessage = resp.Mensaje
-                    console.log(resp.Detalles)
+                    this.errorMessage = this.$store.state.message
+
                 }
                 //Redireccionar a otra pagina
-                if(resp.status == 200){
+                if(this.$store.state.status == 200){
                     this.$router.push("/login")
                 }
             }
-
         },
 
     },
