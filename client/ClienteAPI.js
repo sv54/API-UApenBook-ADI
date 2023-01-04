@@ -31,6 +31,19 @@ export class ClienteAPI {
         }
     }
 
+    async newBook(data){
+        var resp = await fetch(this.BASE_URL+"books",{
+            method:'POST',
+            headers:{
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => response.json());
+
+        console.log(resp)
+        return resp
+    }
+
     async login(username, password){
         var resp = await fetch (this.BASE_URL + "login", {
             method: 'POST',

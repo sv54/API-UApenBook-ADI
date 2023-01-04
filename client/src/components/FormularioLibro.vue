@@ -4,9 +4,14 @@ export default {
     name: "App",
     data() {
         return {
-            name: "UApenBook",
-            email: '',
-            password: '',
+            name: '',
+            year: 0,
+            language: '',
+            description: '',
+            cover: '',
+            pdf: '',
+            author: 0,
+            user_id: 0,
             error: false
         };
     },
@@ -14,16 +19,25 @@ export default {
         this.error == false
     },
     methods: {
-        async loginFromApi() {
-            console.log(this.email);
-            console.log(this.password);
+        async crearLibro(){
+            var data= {
+                name: this.name, 
+                year: this.year, 
+                language: this.language,
+                description: this.description,
+                cover: this.cover,
+                pdf: this.pdf,
+                author: this.author,
+                user_id: this.user_id            
+            }
+            console.log(data);
+
             const api = new ClienteAPI();
-            var resp = await api.login(this.email, this.password)
+            var resp = await api.newBook(data);
             if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
                 this.error = true
             }
             console.log(resp)
-
         },
 
     },
@@ -34,13 +48,30 @@ export default {
     <div class="container">
         <div class="login">
             <h1 class="title">Upload Book</h1>
-            <form action class="form" @submit.prevent="loginFromApi">
-                <label class="form-label" for="#email">Email:</label>
-                <input v-model="email" class="form-input" type="email" id="email" required placeholder="Email">
-                <label class="form-label" for="#password">Password:</label>
-                <input v-model="password" class="form-input" type="password" id="password" placeholder="Password">
-                <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
-                <input class="form-submit" type="submit" value="Login">
+            <form action class="form" @submit.prevent="crearLibro">
+                <label class="form-label" for="#name">Name:</label>
+                <input v-model="name" class="form-input" type="text" id="name" required placeholder="Name">
+
+                <label class="form-label" for="#year">Year:</label>
+                <input v-model="year" class="form-input" type="number" id="year" required placeholder="Ej: 1998">
+
+                <label class="form-label" for="#language">Language:</label>
+                <input v-model="language" class="form-input" type="text" id="language" required placeholder="Langauge">
+
+                <label class="form-label" for="#description">Description:</label>
+                <textarea v-model="description" rows="5" cols="60" name="description" id="description" required placeholder="Description"></textarea>
+                
+                <label class="form-label" for="#cover">Cover:</label>
+                <input class="form-input" type="file" id="cover">
+
+                <label class="form-label" for="#pdf">Archivo:</label>
+                <input class="form-input" type="file" id="pdf">
+
+                <label class="form-label" for="#author">Author:</label>
+                <input v-model="author" class="form-input" type="number" id="author">
+
+                <p v-if="error" class="error">Has hecho algo mal.</p>
+                <input class="form-submit" type="submit" value="Crear">
             </form>
         </div>
 

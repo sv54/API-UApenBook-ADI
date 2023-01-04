@@ -192,8 +192,10 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var message = "Libro ha sido creado"
     var b = req.body
 
-    var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
+    // var token = mw.getTokenFromAuthHeader(req)
+    // var payload = jwt.decode(token,config.SECRET)
+    
+    var payload = 0 //borrar una vez implementado el login
 
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
         [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, payload.id], function (err) {
@@ -202,7 +204,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
                 status = 400
             }
             // get the last insert id
-            //console.log(`A row has been inserted with rowid ${this.lastID}`);
+            console.log(`A row has been inserted with rowid ${this.lastID}`);
             res.statusCode = status
             updateTodosLibros();
             res.send({ "status code": status, "message:": message, "id": this.lastID })
