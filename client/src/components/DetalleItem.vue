@@ -10,6 +10,10 @@
     },
     methods:{
         async getItemFromAPI(){
+            await this.$store.dispatch('getItem', {id: this.$route.params.id})
+
+
+
             const api = new ClienteAPI;
             var libro = await api.getBook(this.$route.params.id)
             this.book = libro.libro[0]
