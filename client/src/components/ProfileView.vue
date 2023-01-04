@@ -1,5 +1,4 @@
 <script>
-    console.log("Hello World from MainView.vue!")
 </script>
 
 <template>
