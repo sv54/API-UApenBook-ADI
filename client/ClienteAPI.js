@@ -50,6 +50,23 @@ export class ClienteAPI {
         
     }
 
+    async register(username, email, password, avatar='', admin = false){
+        var resp = await fetch (this.BASE_URL + "register", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: username, email: email, password: password, avatar: avatar, admin:admin })
+        }).then((response) => response.json());
+
+        if(resp.status == 200){
+            return resp
+        }
+        else{
+            return resp
+        }
+    }
+
     async setItemState(id, estado ) {
         var resp = await fetch(this.BASE_URL+"/"+id, {
             method:'PATCH',
