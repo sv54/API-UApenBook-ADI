@@ -8,8 +8,10 @@ export default createStore({
 		JWT: "",
 		message: "",
 		status: "",
-		books: [],
+		books: {},
 		book: [],
+		totalBooks: 0,
+		pageSize: 8,
 	},
 	mutations: {
 		UPDATE_JWT(state, token) {
@@ -23,6 +25,15 @@ export default createStore({
 		},
 		UPDATE_book(state, book) {
 			state.book = book;
+		},
+		UPDATE_books(state, books) {
+			state.books = books;
+		},
+		UPDATE_totalBooks(state, totalBooks) {
+			state.totalBooks = totalBooks;
+		},
+		UPDATE_pageSize(state, pageSize) {
+			state.pageSize = pageSize;
 		},
 	},
 
@@ -79,10 +90,19 @@ export default createStore({
 			context.commit("UPDATE_JWT", "");
 		},
 
-		async getItem(context, payload) {
-			var result = state.books.find((obj) => {
-				return obj.id === payload.id;
-			});
+		async getBook(context, payload) {
+			console.log(this.state.books.libros)
+			console.log(this.state.books)
+			var result = undefined
+			for(book in this.state.books){
+				console.log(book)
+				if(book.libros.id == payload.id){
+					result = book
+				}
+			}
+			// var result = this.state.books.find((obj) => {
+			// 	return obj.id === payload.id;
+			// });
 
 			if (result == undefined) {
 				var resp = await fetch(BASE_URL + "books/" + id).then((response) =>
@@ -98,6 +118,22 @@ export default createStore({
 				context.commit("UPDATE_book", result);
 			}
 		},
+
+		async getBooks(context, payload) {
+			var resp = await fetch(BASE_URL + "books?page="+payload.page+"&pageSize="+payload.pageSize)
+        	.then((response) => response.json());
+
+
+			if(resp.status == 200){
+				context.commit("UPDATE_books", resp)
+				context.commit("UPDATE_totalBooks", resp.total);
+				context.commit("UPDATE_status", resp.status);
+				context.commit("UPDATE_pageSize", resp.pageSize);
+			}
+			else{
+				console.log('Status no es 200')
+			}
+		}
 	},
 
 	getters: {},

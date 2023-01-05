@@ -20,9 +20,18 @@
     },
     methods:{
         async getItemsFromAPI() {
-            const api = new ClienteAPI();
-            this.books = await api.getItems(this.$route.params.page);
-            this.numPaginas  = await Math.floor(this.books.total / this.books.pageSize) + 1
+            await this.$store.dispatch('getBooks', {page: this.$route.params.page, pageSize: 8})
+            this.books = this.$store.state.books
+            this.numPaginas = Math.floor(this.books.total / this.books.pageSize)
+            console.log(this.books)
+
+
+
+            // const api = new ClienteAPI();
+            // this.books = await api.getItems(this.$route.params.page);
+            // this.numPaginas  = await Math.floor(this.books.total / this.books.pageSize) + 1
+            // console.log(this.books)
+            // console.log(typeof this.books)
         }
     },
     created(){
