@@ -1,9 +1,9 @@
 // Librerias
 const { response } = require('express');
-const express = require('express'); 
+const express = require('express');
 var router = express.Router();
-const app = express(); 
-app.use(express.json()); 
+const app = express();
+app.use(express.json());
 const sqlite3 = require('sqlite3').verbose();
 var jwt = require('jwt-simple')
 var moment = require('moment')
@@ -19,18 +19,17 @@ var todosLibros;
 
 
 
-
-
 var fileStoregeEngine = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './uploads')
+        cb(null, './uploads')
     },
     filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now())
+        let type = file.mimetype.split("/")[1]
+        cb(null, file.fieldname + '-' + Date.now() + "." + type)
     }
 });
 
-const upload = multer({storage: fileStoregeEngine});
+const upload = multer({ storage: fileStoregeEngine });
 
 
 //Abrimos conexion a la base de datos
@@ -41,7 +40,7 @@ let db = new sqlite3.Database('DataBase.db', (err) => {
     //console.log('Connected to the SQlite database.');
 });
 
-function updateTodosLibros(){
+function updateTodosLibros() {
     let sql = 'SELECT * From books';
 
     db.all(sql, [], (err, rows) => {
@@ -49,7 +48,7 @@ function updateTodosLibros(){
         if (err) {
             throw new Error(err.message)
         }
-        else{
+        else {
             todosLibros = rows
         }
     });
@@ -73,7 +72,7 @@ app.post('/single', upload.single('image'), (req, res) => {
 //     res.send("Multiple Files uploadede")
 // });
 
-app.get('/updateTodosLibros', function(req, res){
+app.get('/updateTodosLibros', function (req, res) {
 
     let sql = 'SELECT * From books';
 
@@ -81,13 +80,13 @@ app.get('/updateTodosLibros', function(req, res){
 
         if (err) {
             res.statusCode = 500
-            res.send({"status": 500, "error": err.message })
+            res.send({ "status": 500, "error": err.message })
         }
-        else{
+        else {
             todosLibros = rows
             res.statusCode = 200
             console.log(rows)
-            res.send({"libro": todosLibros})
+            res.send({ "libro": todosLibros })
         }
     });
 });
@@ -97,23 +96,23 @@ app.get('/updateTodosLibros', function(req, res){
 //Ejemplo paginacion: localhost:3000/books?page=1&pageSize=4
 app.get('/books', function (req, res) {
 
-    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize):8;
-    const page = req.query.page ? parseInt(req.query.page):1;
-    const startIndex = (page-1)*pageSize;
-    const endIndex = page*pageSize;
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 8;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
 
-    const results={}
+    const results = {}
 
-    var nextPage = page+1
-    var prevPage = page-1
-    var nextURL= '/books?page='+nextPage+'&pageSize='+pageSize
-    var prevURL= '/books?page='+prevPage+'&pageSize='+pageSize
+    var nextPage = page + 1
+    var prevPage = page - 1
+    var nextURL = '/books?page=' + nextPage + '&pageSize=' + pageSize
+    var prevURL = '/books?page=' + prevPage + '&pageSize=' + pageSize
 
-    if (prevPage<=0){
-        prevURL=''
+    if (prevPage <= 0) {
+        prevURL = ''
     }
 
-    results.status=''
+    results.status = ''
     results.pages = {
         nextURL: nextURL,
         prevURL: prevURL
@@ -123,16 +122,16 @@ app.get('/books', function (req, res) {
 
     var librosADevolver = todosLibros.slice(startIndex, endIndex);
     res.status = 200
-    if(todosLibros.length<=pageSize*(page-1)+librosADevolver.length){
-        results.pages.nextURL=''
+    if (todosLibros.length <= pageSize * (page - 1) + librosADevolver.length) {
+        results.pages.nextURL = ''
     }
     console.log(todosLibros)
     console.log(librosADevolver)
 
-    res.send({'libros': librosADevolver,'total': todosLibros.length, 'pageSize': pageSize, 'pages': results.pages, 'status': res.status})
-    
+    res.send({ 'libros': librosADevolver, 'total': todosLibros.length, 'pageSize': pageSize, 'pages': results.pages, 'status': res.status })
 
-    //No podemos recuperar todos los libros cada vez que realizamos una peticion
+
+    //No podemos recuperar todos los libros cada vez que realizamos una peticion!
 
     // db.all(sql, [], (err, rows) => {
     //     if (err) {
@@ -155,17 +154,17 @@ app.get('/books', function (req, res) {
     //         console.log(results)
     //         res.send(results)
     //     }
-        
+
     // });
 
-    
-    
+
+
 });
 
 //Obtenemos un libro en concreto, pasandole id
 app.get('/books/:id', function (req, res) {
     const idLibro = req.params.id
-    
+
 
     let sql = `SELECT * From books WHERE id = ` + idLibro;
     db.all(sql, [], (err, row) => {
@@ -175,13 +174,13 @@ app.get('/books/:id', function (req, res) {
             res.statusCode = 404
             res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
         }
-        else{
+        else {
             res.statusCode = 200
             console.log(row)
             res.send({ "status": 200, "libro": row })
         }
     });
-    
+
 
 })
 
@@ -193,7 +192,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var b = req.body
 
     var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
+    var payload = jwt.decode(token, config.SECRET)
 
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
         [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, payload.id], function (err) {
@@ -206,17 +205,17 @@ app.post('/books', mw.checkJWT, function (req, res) {
             res.statusCode = status
             updateTodosLibros();
             res.send({ "status code": status, "message:": message, "id": this.lastID })
-    });
+        });
 
-    
+
 })
 
 //Eliminar un libro
-app.delete('/books/:id', mw.checkJWT, function(req, res){
+app.delete('/books/:id', mw.checkJWT, function (req, res) {
     const idLibro = req.params.id
-    
+
     var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
+    var payload = jwt.decode(token, config.SECRET)
 
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
@@ -227,7 +226,7 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
-            if(row[0].user_id == payload.id || row[0].admin){
+            if (row[0].user_id == payload.id || row[0].admin) {
                 sql = `DELETE FROM books WHERE id = ` + idLibro;
                 db.all(sql, [], (err, row) => {
                     if (err) {
@@ -241,9 +240,9 @@ app.delete('/books/:id', mw.checkJWT, function(req, res){
                     }
 
                 });
-            }else{
+            } else {
                 res.statusCode = 403
-                res.send({status:403, "message": "No tienes permiso para borrar este libro."})
+                res.send({ status: 403, "message": "No tienes permiso para borrar este libro." })
             }
         }
     });
@@ -255,7 +254,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
     var b = req.body
 
     var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
+    var payload = jwt.decode(token, config.SECRET)
 
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
@@ -265,20 +264,20 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
             res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
         }
         else {
-            
-            if(row[0].user_id == payload.id || payload.admin){
+
+            if (row[0].user_id == payload.id || payload.admin) {
 
                 sql = 'UPDATE books SET name = "' + b.name + '", year =' + b.year + ', language ="' + b.language +
                     '", description ="' + b.description + '", cover ="' + b.cover + '",pdf ="' + b.pdf + '"';
-                if (Number.isInteger(b.author)){
+                if (Number.isInteger(b.author)) {
                     sql = sql + ',author =' + b.author
                 }
-                else{
+                else {
                     sql = sql + ',author = NULL'
                 }
-                sql = sql  + ' WHERE id =' + idLibro
+                sql = sql + ' WHERE id =' + idLibro
 
-                
+
 
                 db.all(sql, [], (err, row) => {
                     if (err) {
@@ -292,9 +291,9 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
                     }
 
                 });
-            }else{
+            } else {
                 res.statusCode = 403
-                res.send({status:403, "message": "No tienes permiso para modificar este libro."})
+                res.send({ status: 403, "message": "No tienes permiso para modificar este libro." })
             }
         }
 
@@ -302,7 +301,7 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
 })
 
 //Registro de usuario
-app.post('/register', function(req,res){
+app.post('/register', function (req, res) {
     var r = req.body
     var email = r.email
     var name = r.name
@@ -310,64 +309,64 @@ app.post('/register', function(req,res){
     var password = r.password
     var admin = r.admin
 
-    db.run(`INSERT INTO users(name,email,avatar,password,admin) VALUES(?,?,?,?,?)`,[name,email,avatar,password,admin],function (err){
+    db.run(`INSERT INTO users(name,email,avatar,password,admin) VALUES(?,?,?,?,?)`, [name, email, avatar, password, admin], function (err) {
         if (err) {
-            res.status=400
-            res.send({"status":400,"message":"Error al registrarse. Usuario con este email ya existe!","Detalles":err.message})
-        }else{
-            res.status=200
-            res.send({"status":200,"message":"Usuario registrado con exito."})
+            res.status = 400
+            res.send({ "status": 400, "message": "Error al registrarse. Usuario con este email ya existe!", "Detalles": err.message })
+        } else {
+            res.status = 200
+            res.send({ "status": 200, "message": "Usuario registrado con exito." })
         }
     })
 })
 
 //Login de usuario
-app.post('/login', function(req,res){
+app.post('/login', function (req, res) {
     var email = req.body.email
     var password = req.body.password
     console.log(req.body)
-    var sql = `SELECT password,id,admin FROM users WHERE email='`+[email]+`'`;
-    db.all(sql, function(err,rows){
+    var sql = `SELECT password,id,admin FROM users WHERE email='` + [email] + `'`;
+    db.all(sql, function (err, rows) {
 
-    if(!err){
-        if(!rows[0]){
-            res.send({
-                message:"Email o contraseña incorrectos.",
-                status:401
-            })
-        }else{
-            if(rows[0].password == password){
-                var payload = {
-                    id: rows[0].id,
-                    login:email,
-                    password:password,
-                    admin:rows[0].admin
-                }
-    
-                var token = jwt.encode(payload,config.SECRET)
-                res.status = 200
+        if (!err) {
+            if (!rows[0]) {
                 res.send({
-                    message:"OK",
-                    jwt: token,
-                    status: 200
-                })      
-            }else{
-                res.status = 401
-                res.send({
-                    message:"Email o contraseña incorrectos.",
-                    status:401
+                    message: "Email o contraseña incorrectos.",
+                    status: 401
                 })
-            }
-        }
+            } else {
+                if (rows[0].password == password) {
+                    var payload = {
+                        id: rows[0].id,
+                        login: email,
+                        password: password,
+                        admin: rows[0].admin
+                    }
 
-    }else{
-        console.log(err.message)
-        res.statusCode = 500
-        res.send({
-            message:err.message,
-            code:500
-        })
-    }
+                    var token = jwt.encode(payload, config.SECRET)
+                    res.status = 200
+                    res.send({
+                        message: "OK",
+                        jwt: token,
+                        status: 200
+                    })
+                } else {
+                    res.status = 401
+                    res.send({
+                        message: "Email o contraseña incorrectos.",
+                        status: 401
+                    })
+                }
+            }
+
+        } else {
+            console.log(err.message)
+            res.statusCode = 500
+            res.send({
+                message: err.message,
+                code: 500
+            })
+        }
     })
 })
 
@@ -377,63 +376,63 @@ app.post('/login', function(req,res){
 //Obtener todos los usuarios de la BD
 app.get('/users', mw.checkJWT, function (req, res) {
     var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
+    var payload = jwt.decode(token, config.SECRET)
 
-    if(payload.admin){
+    if (payload.admin) {
         let sql = `SELECT * From users`;
         db.all(sql, [], (err, rows) => {
             if (err) {
                 res.statusCode = 500
                 res.send({ "status": 500, "error": err });
             }
-            else{
+            else {
                 res.statusCode = 200
                 res.send({ "status": 200, "users": rows })
             }
 
         });
-    }else{
-        res.statusCode=403
-        res.send({"status":403, "message": "Forbidden"})
+    } else {
+        res.statusCode = 403
+        res.send({ "status": 403, "message": "Forbidden" })
     }
 });
 
 //Obtenemos un usuario segun su id
 app.get('/users/:id', mw.checkJWT, function (req, res) {
     const idUser = req.params.id
-    
+
     var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
-    
-    if(payload.admin || payload.id == idUser){
+    var payload = jwt.decode(token, config.SECRET)
+
+    if (payload.admin || payload.id == idUser) {
         let sql = `SELECT * From users WHERE id = ` + idUser;
         db.all(sql, [], (err, row) => {
             if (JSON.stringify(row) == "[]") {
                 res.statusCode = 404
                 res.send({ "status": 404, "message": "El user no existe o ya ha sido eliminado" });
             }
-            else{
+            else {
                 res.statusCode = 200
                 res.send({ "status": 200, "user": row })
             }
         });
-    }else{
-        res.statusCode=403
-        res.send({"status":403, "message": "Forbidden"})
+    } else {
+        res.statusCode = 403
+        res.send({ "status": 403, "message": "Forbidden" })
     }
 
 
 })
 
-app.delete('/users/:id', mw.checkJWT, function(req, res){
+app.delete('/users/:id', mw.checkJWT, function (req, res) {
     const idUser = req.params.id
-    
-    var token = mw.getTokenFromAuthHeader(req)
-    var payload = jwt.decode(token,config.SECRET)
 
-    if(payload.admin || payload.id == idUser){
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token, config.SECRET)
+
+    if (payload.admin || payload.id == idUser) {
         var sql = `SELECT * FROM users WHERE id = ` + idUser;
-        
+
 
         db.all(sql, [], (err, row) => {
             if (JSON.stringify(row) == "[]") {
@@ -455,9 +454,9 @@ app.delete('/users/:id', mw.checkJWT, function(req, res){
                 });
             }
         });
-    }else{
-        res.statusCode=403
-        res.send({"status":403, "message": "Forbidden"})
+    } else {
+        res.statusCode = 403
+        res.send({ "status": 403, "message": "Forbidden" })
     }
 
 })
