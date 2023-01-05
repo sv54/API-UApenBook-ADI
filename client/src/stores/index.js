@@ -8,7 +8,7 @@ export default createStore({
 		JWT: "",
 		message: "",
 		status: "",
-		books: {},
+		books: [],
 		book: [],
 		totalBooks: 0,
 		pageSize: 8,
@@ -24,6 +24,7 @@ export default createStore({
 			state.status = status;
 		},
 		UPDATE_book(state, book) {
+			console.log(book)
 			state.book = book;
 		},
 		UPDATE_books(state, books) {
@@ -91,30 +92,32 @@ export default createStore({
 		},
 
 		async getBook(context, payload) {
-			console.log(this.state.books.libros)
-			console.log(this.state.books)
+			// console.log(this.state.books.libros)
+			// console.log(this.state.books)
+			console.log("Getting one book")
 			var result = undefined
-			for(book in this.state.books){
-				console.log(book)
-				if(book.libros.id == payload.id){
-					result = book
+			let libros = JSON.stringify(this.state.books)
+			libros = JSON.parse(libros)
+			if(libros == undefined){
+				for(let i=0; i < libros.libros.length; i++){
+					if(libros.libros[i].id == payload.id){
+						result = libros.libros[i]
+					}
 				}
 			}
-			// var result = this.state.books.find((obj) => {
-			// 	return obj.id === payload.id;
-			// });
-
 			if (result == undefined) {
-				var resp = await fetch(BASE_URL + "books/" + id).then((response) =>
+				var resp = await fetch(BASE_URL + "books/" + payload.id).then((response) =>
 					response.json()
 				);
 
 				if (resp.status == 200) {
-					context.commit("UPDATE_book", resp);
+					console.log("recuperando libro con server", resp)
+					context.commit("UPDATE_book", resp.libro[0]);
 				} else {
 					console.log(resp);
 				}
 			} else {
+				console.log("recuperando libro sin server")
 				context.commit("UPDATE_book", result);
 			}
 		},
@@ -123,7 +126,7 @@ export default createStore({
 			var resp = await fetch(BASE_URL + "books?page="+payload.page+"&pageSize="+payload.pageSize)
         	.then((response) => response.json());
 
-
+			console.log("Getting all books")
 			if(resp.status == 200){
 				context.commit("UPDATE_books", resp)
 				context.commit("UPDATE_totalBooks", resp.total);
@@ -131,7 +134,7 @@ export default createStore({
 				context.commit("UPDATE_pageSize", resp.pageSize);
 			}
 			else{
-				console.log('Status no es 200')
+				console.log('Error obteniendo libros')
 			}
 		}
 	},

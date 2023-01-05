@@ -10,14 +10,14 @@
     },
     methods:{
         async getItemFromAPI(){
-            await this.$store.dispatch('getItem', {id: this.$route.params.id})
+            await this.$store.dispatch('getBook', {id: this.$route.params.id})
+            this.book = this.$store.state.book
+            console.log(this.book)
 
-
-
-            const api = new ClienteAPI;
-            var libro = await api.getBook(this.$route.params.id)
-            this.book = libro.libro[0]
-            console.log(libro.libro[0])
+            // const api = new ClienteAPI;
+            // var libro = await api.getBook(this.$route.params.id)
+            // this.book = libro.libro[0]
+            // console.log(libro.libro[0])
         }
     },
     created(){

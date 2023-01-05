@@ -16,13 +16,14 @@
             name: "UApenBook",
             books: [],
             numPaginas: 0,
+
         };
     },
     methods:{
         async getItemsFromAPI() {
             await this.$store.dispatch('getBooks', {page: this.$route.params.page, pageSize: 8})
             this.books = this.$store.state.books
-            this.numPaginas = Math.floor(this.books.total / this.books.pageSize)
+            this.numPaginas = Math.floor(this.books.total / this.books.pageSize) + 1
             console.log(this.books)
 
 
@@ -32,7 +33,7 @@
             // this.numPaginas  = await Math.floor(this.books.total / this.books.pageSize) + 1
             // console.log(this.books)
             // console.log(typeof this.books)
-        }
+        },
     },
     created(){
         this.getItemsFromAPI()
@@ -47,9 +48,10 @@
         <div class="grid-container" >
             <div v-for="libro in books.libros">
                 <div class="grid-item">
-                    <a :href="'/book/' + libro.id">
-                    <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
-                    <h6>{{ libro.name }}</h6></a>
+                    <router-link :to="{name: 'details', params: {id: libro.id}}" >
+                        <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
+                        <h6>{{ libro.name }}</h6>
+                    </router-link>
                 </div>
             </div>
         </div>
