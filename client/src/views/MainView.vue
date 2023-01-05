@@ -72,7 +72,7 @@
   padding: auto;
 }
 .grid-item {
-  padding: 20px;
+
   padding-top: 10%;
   text-align: center;
 }
@@ -80,6 +80,8 @@
 img{
     max-width: 100%;
     max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
     object-fit: contain;
 }
 

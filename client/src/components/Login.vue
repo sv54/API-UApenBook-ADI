@@ -20,6 +20,7 @@ export default {
             })
             if(this.$store.state.JWT != 0){
                 this.$router.push("/books")
+                this.$root.$emit('loggedIn', null)
             }
             else{
                 this.error = true

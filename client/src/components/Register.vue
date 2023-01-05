@@ -10,7 +10,10 @@ export default {
             password: '',
             repeatPassword: '',
             error: false,
-            errorMessage: ''
+            errorMessage: '',
+            previewImage: null,
+            image : null,
+            imageUrl: null
         };
     },
     created(){
@@ -47,6 +50,24 @@ export default {
                 }
             }
         },
+        uploadImage(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{
+                this.previewImage = e.target.result;
+                console.log(this.previewImage);
+            };
+        },
+        onChange(e) {
+            const file = e.target.files[0]
+            this.image = file
+            this.imageUrl = URL.createObjectURL(file)
+        },
+        deleteImg(){
+            this.image = null
+            this.imageUrl = null
+        }
 
     },
 };
@@ -57,65 +78,30 @@ export default {
         <div class="login">
             <h1 class="title">Registro de Usuarios</h1>
             <form action class="form" @submit.prevent="RegisterFromApi">
-                <label class="form-label" for="#username">Nombre de Usuario:</label>
+                <label class="form-label" for="#username">* Nombre de Usuario:</label>
                 <input v-model="username" class="form-input" type="text" id="username" required placeholder="Nombre de Usuario">
-                <label class="form-label" for="#email">Email:</label>
+                <label class="form-label" for="#email">* Email:</label>
                 <input v-model="email" class="form-input" type="email" id="email" required placeholder="Email">
-                <label class="form-label" for="#password">Contraseña:</label>
+                <label class="form-label" for="#password">* Contraseña:</label>
                 <input v-model="password" class="form-input" type="password" id="password" placeholder="Password">
-                <label class="form-label" for="#repeatPassword">Repita contraseña:</label>
+                <label class="form-label" for="#repeatPassword">* Repita contraseña:</label>
                 <input v-model="repeatPassword" class="form-input" type="password" id="repeatPassword" placeholder="Password">
+                <!-- <label class="form-label fileUpload" for="#avatar">Avatar</label>
+                <input class="form-control" type="file" accept="image/*" name="avatar" @change="onChange" /> -->
+                <!-- <div id="preview">
+                    <img v-if="imageUrl" :src="imageUrl" />
+                </div> -->
                 <p v-if="error" class="error">{{ errorMessage }}</p>
-                <input class="form-submit" type="submit" value="Login">
+                <input class="form-submit" type="submit" value="Registrarse">
             </form>
         </div>
-
-
-        <!-- <form method="POST" action="" @submit.prevent="login">
-            <div class="row ">
-                <div class="col"></div>
-                <div class="col-4 text-center">
-                    <label for="#email">Email</label><br>
-                    <input type="text" id="userName" name="userName" required>
-                </div>
-                <div class="col"></div>
-
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col-4 text-center">
-                    <label for="#password">Contraseña</label><br>
-                    <input type="password" id="password" name="password" required> 
-                </div>
-                <div class="col"></div>
-
-            </div>
-            <input class="form-submit" type="submit" value="Login"> 
-            <div class="row">
-                <div class="col"></div>
-
-                <div class="col-4 text-center">
-                    <button type="submit" class="btn btn-success " @click="loginFromApi(userName, password )">Login</button>
-                </div>
-                <div class="col"></div>
-
-            </div>
-        </form> -->
     </div>
 </template>
 
-<!-- <style scoped>
-button{
-    margin: 4%;
-    vertical-align: middle;
-}
-input{
-    width: 60%;
-    vertical-align: middle;
-
-}
-</style> -->
 <style scoped>
+.fileUpload{
+    margin-top: 3%
+}
 .login {
     padding: 2rem;
 }

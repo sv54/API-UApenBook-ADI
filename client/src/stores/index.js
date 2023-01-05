@@ -63,6 +63,18 @@ export default createStore({
 		},
 
 		async register(context, payload) {
+			const uploadImg = await fetch(BASE_URL + "single", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					avatar: payload.avatar,
+				}),
+			})
+
+
+
 			const resp = await fetch(BASE_URL + "register", {
 				method: "POST",
 				headers: {
