@@ -151,7 +151,7 @@ export default createStore({
 		},
 
 		async searchBooks(context, payload) {
-			var resp = await fetch(BASE_URL + "search/" + payload.search)
+			var resp = await fetch(BASE_URL + "search/" + payload.search + "/"+ payload.page)
         	.then((response) => response.json());
 
 			console.log("Seaching books with " + payload.search)
@@ -159,6 +159,7 @@ export default createStore({
 				context.commit("UPDATE_books", resp.books)
 				context.commit("UPDATE_status", resp.status);
 				context.commit("UPDATE_pageSize", resp.message);
+				context.commit("UPDATE_totalBooks", resp.total);
 			}
 			else{
 				console.log('No books were found')

@@ -28,7 +28,7 @@ const router = createRouter({
       component: DetailItem
     },
     {
-      path: '/search/:name?',
+      path: '/search/:str?/:page?',
       name: 'search',
       component: SearchItems
     },

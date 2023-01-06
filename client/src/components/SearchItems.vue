@@ -23,13 +23,31 @@
     },
     methods:{
         async SearchItems() {
-            await this.$store.dispatch('searchBooks', {search: this.search})
+            var page = 1;
+            var str = ''
+            if(this.$route.params.page != undefined && this.$route.params.page > 0){
+                page = this.$route.params.page
+            }
+            if(this.$route.params.str != undefined && this.$route.params.str != '' && this.$route.params.str != ' '){
+                str = this.$route.params.str
+            }
+            if(this.search != undefined && this.search != ''  && this.search != ' '){
+                str = this.search
+            }
+            console.log(str)
+            await this.$store.dispatch('searchBooks', {search: str, page: page})
             this.books = this.$store.state.books
-            this.numPaginas = Math.floor(this.books.length / 8) + 1
+            this.numPaginas = Math.floor(this.$store.state.totalBooks / 8) + 1
             console.log(this.books)
         },
     },
     created(){
+        console.log("created")
+        if(this.$route.params.str != null && this.$route.params.page != undefined && this.$route.params.str != ''
+        && this.$route.params.page != null && this.$route.params.page != undefined && this.$route.params.page != ''){
+            this.search = this.$route.params.str
+            this.SearchItems()
+        }
     },
     
     
@@ -58,8 +76,10 @@
         </div>
         <nav>
             <div class="pagination row">
-                <span  v-for="index in numPaginas" :key="index">
-                    <li class="page-item"><a :href="'/books/' + index">{{ index }}</a></li>
+                <span  v-for="index in numPaginas" :key="index" @submit.prevent="SearchItems">
+                    <!-- <li class="page-item"><router-link :to="{name: 'search', params: {str:this.search ,page: index}}">{{ index }}</router-link></li> -->
+                    <li class="page-item"><a :href="'/search/'+ search + '/' + index">{{ index }}</a></li>
+
                 </span>
             </div>
         </nav>

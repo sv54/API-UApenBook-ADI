@@ -185,8 +185,9 @@ app.get('/books/:id', function (req, res) {
 })
 
 //Obtenemos libros con la barra de busqueda
-app.get('/search/:name', function (req, res) {
+app.get('/search/:name/:page', function (req, res) {
     const strSearch = req.params.name
+    const page = req.params.page
     var booksSearch = []
 
     for(let i = 0; i<todosLibros.length; i++){
@@ -206,7 +207,11 @@ app.get('/search/:name', function (req, res) {
         message = 'OK'
     }
 
-    res.send({status: res.status, books: booksSearch, message: message})
+    const startIndex = (page - 1) * 8;
+    const endIndex = page * 8;
+
+    let returnBooks = booksSearch.slice(startIndex, endIndex);
+    res.send({status: res.status, books: returnBooks, message: message, total: booksSearch.length})
 })
 
 
