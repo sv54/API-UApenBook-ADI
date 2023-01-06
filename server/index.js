@@ -197,31 +197,15 @@ app.get('/search', function (req, res) {
     let message = ''
     if(booksSearch.length == 0){
         message = "No se ha encontrado ningun libro"
+        res.status = 204
+
     }
     else{
+        res.status = 200
         message = 'OK'
     }
 
-    res.status = 200
-    res.send({status: res.status, books: booksSearch})
-
-
-    // let sql = `SELECT * From books WHERE id = ` + idLibro;
-    // db.all(sql, [], (err, row) => {
-    //     //console.log(row)
-
-    //     if (JSON.stringify(row) == "[]" || row == undefined) {
-    //         res.statusCode = 404
-    //         res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
-    //     }
-    //     else {
-    //         res.statusCode = 200
-    //         console.log(row)
-    //         res.send({ "status": 200, "libro": row })
-    //     }
-    // });
-
-
+    res.send({status: res.status, books: booksSearch, message: message})
 })
 
 
