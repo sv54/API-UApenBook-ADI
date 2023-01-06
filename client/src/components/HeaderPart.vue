@@ -42,7 +42,7 @@ export default {
                     <h5>Buscar</h5>
                 </RouterLink>
             </div>
-            <div class="headerLinks col-1">
+            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1">
                     <RouterLink to="/book/new">
                         <h5>Upload Book</h5>
                     </RouterLink>
