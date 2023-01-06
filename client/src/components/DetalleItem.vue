@@ -6,17 +6,18 @@
         return {
             name: "UApenBook",
             book: [],
+            authorName: ''
         };
     },
     methods:{
         async getItemFromAPI(){
-            await this.$store.dispatch('getBook', {id: this.$route.params.id})
-            this.book = this.$store.state.book
-
-            // const api = new ClienteAPI;
-            // var libro = await api.getBook(this.$route.params.id)
-            // this.book = libro.libro[0]
-            // console.log(libro.libro[0])
+            const api = new ClienteAPI;
+            var libro = await api.getBook(this.$route.params.id)
+            this.book = libro.libro[0]
+            console.log(libro.libro[0])
+            var auxName = await api.getAuthor(this.book.author);
+            auxName = auxName.author[0].name
+            this.authorName = auxName;
         }
     },
     created(){
@@ -39,7 +40,7 @@
                     {{ book.description }}
                 </div>
                 <div class="description">
-                    {{ book.author }}
+                    {{ authorName }}
                 </div>
             </div>  
         </div>

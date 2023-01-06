@@ -6,6 +6,7 @@ import DetailItem from '../components/DetalleItem.vue'
 import Register from '../components/Register.vue'
 import SearchItems from '../components/SearchItems.vue'
 
+import FormularioLibro from '../components/FormularioLibro.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,7 +50,11 @@ const router = createRouter({
       name: 'register',
       component: Register
     },
-
+    {
+      path: '/book/new',
+      name: 'newBook',
+      component: FormularioLibro
+    },
 
   ]
 })
