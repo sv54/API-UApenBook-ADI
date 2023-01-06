@@ -25,14 +25,6 @@
             this.books = this.$store.state.books
             this.numPaginas = Math.floor(this.books.total / this.books.pageSize) + 1
             console.log(this.books)
-
-
-
-            // const api = new ClienteAPI();
-            // this.books = await api.getItems(this.$route.params.page);
-            // this.numPaginas  = await Math.floor(this.books.total / this.books.pageSize) + 1
-            // console.log(this.books)
-            // console.log(typeof this.books)
         },
     },
     created(){
