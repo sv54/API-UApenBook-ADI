@@ -62,15 +62,15 @@ export default createStore({
 		},
 
 		async register(context, payload) {
-			const uploadImg = await fetch(BASE_URL + "single", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					avatar: payload.avatar,
-				}),
-			})
+			// const uploadImg = await fetch(BASE_URL + "single", {
+			// 	method: "POST",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body: JSON.stringify({
+			// 		avatar: payload.avatar,
+			// 	}),
+			// })
 
 
 
@@ -168,6 +168,20 @@ export default createStore({
 				context.commit("UPDATE_message", 'no OK')
 
 			}
+		},
+
+		async uploadImg(context, payload){
+			console.log(payload)
+			
+			var resp = await fetch(BASE_URL + "single",{method: "POST",
+				body: JSON.stringify({
+					image: payload.image,
+					image1: payload.imageURL,
+
+				})
+			})
+        	.then((response) => response.json());
+			console.log(resp)
 		}
 	},
 

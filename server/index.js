@@ -29,7 +29,8 @@ var fileStoregeEngine = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: fileStoregeEngine });
+// const upload = multer({ storage: fileStoregeEngine })
+const upload = multer({dest: "uploads/"})
 
 
 //Abrimos conexion a la base de datos
@@ -61,11 +62,25 @@ app.get('/', function (req, res) {
     //redireccionamos a la pagina principal /books
 })
 
+app.post('/upload', upload.single("image"),uploadFile);
+
+function uploadFile(req, res){
+    console.log(req.body)
+    console.log(req.image)
+    res.status = 200
+    res.send({message: "uploaded"})
+}
+
+app.post('/single', (req, res) => {
+    console.log(req)
+    upload(req,res, (err) => {
+        if(err) {
+            res.status(400).send("Something went wrong!");
+        }
+        res.send(req.file);
+    })
 
 
-app.post('/single', upload.single('image'), (req, res) => {
-    res.statusCode = 201
-    res.send("Single File upload success")
 });
 
 // app.post('/multiple', upload.array('image', 3), (req, res) => {

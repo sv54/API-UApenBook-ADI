@@ -5,7 +5,7 @@ import Login from '../components/Login.vue'
 import DetailItem from '../components/DetalleItem.vue'
 import Register from '../components/Register.vue'
 import SearchItems from '../components/SearchItems.vue'
-
+import Uploadimg from '../components/UploadImage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +48,11 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/uploadImg',
+      name: 'img',
+      component: Uploadimg
     },
 
 
