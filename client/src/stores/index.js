@@ -24,7 +24,6 @@ export default createStore({
 			state.status = status;
 		},
 		UPDATE_book(state, book) {
-			console.log(book)
 			state.book = book;
 		},
 		UPDATE_books(state, books) {
@@ -155,14 +154,19 @@ export default createStore({
         	.then((response) => response.json());
 
 			console.log("Seaching books with " + payload.search)
+
 			if(resp.status == 200){
-				context.commit("UPDATE_books", resp.books)
+				context.commit("UPDATE_books", resp.books);
 				context.commit("UPDATE_status", resp.status);
-				context.commit("UPDATE_pageSize", resp.message);
+				context.commit("UPDATE_message", resp.message);
 				context.commit("UPDATE_totalBooks", resp.total);
+
 			}
 			else{
 				console.log('No books were found')
+				context.commit("UPDATE_books", {books: []})
+				context.commit("UPDATE_message", 'no OK')
+
 			}
 		}
 	},

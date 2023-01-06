@@ -34,15 +34,19 @@
             if(this.search != undefined && this.search != ''  && this.search != ' '){
                 str = this.search
             }
-            console.log(str)
             await this.$store.dispatch('searchBooks', {search: str, page: page})
             this.books = this.$store.state.books
             this.numPaginas = Math.floor(this.$store.state.totalBooks / 8) + 1
-            console.log(this.books)
+            if(this.$store.state.message != 'OK'){
+                this.error = true
+                this.books = []
+            }
+            else{
+                this.error = false
+            }
         },
     },
     created(){
-        console.log("created")
         if(this.$route.params.str != null && this.$route.params.page != undefined && this.$route.params.str != ''
         && this.$route.params.page != null && this.$route.params.page != undefined && this.$route.params.page != ''){
             this.search = this.$route.params.str
@@ -55,27 +59,28 @@
 </script>
 
 <template>
-    <div class = "container">
-        <div class = "searchBar">
-            <form action class="form" @submit.prevent="SearchItems">
-                <input v-model="search" class="form-input" type="text" id="name" required>
-                <input class="form-submit" type="submit" value="Buscar">
-            </form>
+    <div class = "container-fluid">
+        <div class = "searchBar row">
+            <form action class="form " @submit.prevent="SearchItems">
+                <input v-model="search" class="form-input form-control inputClass" type="search" id="name" required >
+                <button class="form-submit btn btn-success inputClass" type="submit" value="">Buscar</button>
+            </form>    
         </div>
+        <p v-if="error" class="error">No se han encontrado libros</p>
+
         <div v-if="books.length > 0" class="grid-container" >
             <div v-for="libro in books">
                 <div class="grid-item">
                     <router-link :to="{name: 'details', params: {id: libro.id}}" >
                         <img src="../../public/uploads/book-default-cover.jpg" alt="No Image Available">
                         <h6>{{ libro.name }}</h6>
-                        <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
 
                     </router-link>
                 </div>
             </div>
         </div>
         <nav>
-            <div class="pagination row">
+            <div v-if="!error && books.length > 0" class="pagination row">
                 <span  v-for="index in numPaginas" :key="index" @submit.prevent="SearchItems">
                     <!-- <li class="page-item"><router-link :to="{name: 'search', params: {str:this.search ,page: index}}">{{ index }}</router-link></li> -->
                     <li class="page-item"><a :href="'/search/'+ search + '/' + index">{{ index }}</a></li>
@@ -87,6 +92,25 @@
 </template>
 
 <style>
+.searchBar{
+    width: 30%;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+form{
+    display: flex;
+}
+.inputClass{
+    margin:auto;
+    display: inline;
+    float: none;
+}
+
+
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto auto;
