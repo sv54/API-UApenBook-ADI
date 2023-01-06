@@ -78,8 +78,7 @@ export default {
         onFileSelected(event){
             console.log(event)
             this.coverFile=event.target.files[0]
-        },
-        async 
+        } 
 
     },
 };
