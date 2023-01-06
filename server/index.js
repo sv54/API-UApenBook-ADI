@@ -185,9 +185,10 @@ app.get('/books/:id', function (req, res) {
 })
 
 //Obtenemos libros con la barra de busqueda
-app.get('/search', function (req, res) {
-    const strSearch = req.body.search
+app.get('/search/:name', function (req, res) {
+    const strSearch = req.params.name
     var booksSearch = []
+
     for(let i = 0; i<todosLibros.length; i++){
         booksName = todosLibros[i].name.toLowerCase()
         if(booksName.includes(strSearch.toLowerCase())){

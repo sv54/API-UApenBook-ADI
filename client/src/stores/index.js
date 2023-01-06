@@ -148,6 +148,21 @@ export default createStore({
 			else{
 				console.log('Error obteniendo libros')
 			}
+		},
+
+		async searchBooks(context, payload) {
+			var resp = await fetch(BASE_URL + "search/" + payload.search)
+        	.then((response) => response.json());
+
+			console.log("Seaching books with " + payload.search)
+			if(resp.status == 200){
+				context.commit("UPDATE_books", resp.books)
+				context.commit("UPDATE_status", resp.status);
+				context.commit("UPDATE_pageSize", resp.message);
+			}
+			else{
+				console.log('No books were found')
+			}
 		}
 	},
 

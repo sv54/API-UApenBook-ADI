@@ -4,6 +4,7 @@ import ProfileView from '../components/ProfileView.vue'
 import Login from '../components/Login.vue'
 import DetailItem from '../components/DetalleItem.vue'
 import Register from '../components/Register.vue'
+import SearchItems from '../components/SearchItems.vue'
 
 
 const router = createRouter({
@@ -22,9 +23,14 @@ const router = createRouter({
       component: MainView
     },
     {
-      path: '/book/:id?',
+      path: '/book/:id',
       name: 'details',
       component: DetailItem
+    },
+    {
+      path: '/search/:name?',
+      name: 'search',
+      component: SearchItems
     },
 
     {

@@ -17,12 +17,6 @@ export default {
             this.$router.push("/books")
         },
     },
-    mounted: function() {
-        this.$root.$on('loggedIn', () =>{
-            console.log("triggered")
-            this.logged = true
-        })
-    }
 };
 </script>
 
@@ -43,7 +37,12 @@ export default {
                     <h5>Home</h5>
                 </RouterLink>
             </div>
-            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-6">
+            <div class="headerLinks col-1">
+                <RouterLink to="/search/">
+                    <h5>Buscar</h5>
+                </RouterLink>
+            </div>
+            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-5">
                 <RouterLink to="/login">
                     <h5>Login</h5>
                 </RouterLink>
@@ -53,7 +52,7 @@ export default {
                     <h5>Register</h5>
                 </RouterLink>
             </div>
-            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 offset-md-8 ">
+            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 offset-md-7 ">
                 <a class="green" @click="logout">
                     <h5>Logout</h5>
                 </a>
