@@ -12,7 +12,8 @@ export default {
             pdf: '',
             author: '',
             user_id: 0,
-            error: false
+            error: false,
+            coverFile: null
         };
     },
     created(){
@@ -73,7 +74,12 @@ export default {
             }
             
             return id;
-        }
+        },
+        onFileSelected(event){
+            console.log(event)
+            this.coverFile=event.target.files[0]
+        },
+        async 
 
     },
 };
@@ -97,7 +103,7 @@ export default {
                 <textarea v-model="description" rows="5" cols="60" name="description" id="description" required placeholder="Description"></textarea>
                 
                 <label class="form-label" for="#cover">Cover:</label>
-                <input class="form-input" type="file" id="cover">
+                <input class="form-input" type="file" id="cover" @change="onFileSelected">
 
                 <label class="form-label" for="#pdf">Archivo:</label>
                 <input class="form-input" type="file" id="pdf">
