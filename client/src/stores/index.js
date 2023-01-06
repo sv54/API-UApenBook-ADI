@@ -12,6 +12,8 @@ export default createStore({
 		book: [],
 		totalBooks: 0,
 		pageSize: 8,
+		authors: [],
+		author: []
 	},
 	mutations: {
 		UPDATE_JWT(state, token) {
@@ -35,6 +37,12 @@ export default createStore({
 		UPDATE_pageSize(state, pageSize) {
 			state.pageSize = pageSize;
 		},
+		UPDATE_authors(state, authors){
+			state.authors = authors;
+		},
+		UPDATE_author(state, author){
+			state.author = author;
+		}
 	},
 
 	actions: {
@@ -170,6 +178,63 @@ export default createStore({
 			}
 		}
 	},
+	async getAuthors(context,payload) {
+        var resp = await fetch(BASE_URL + "authors")
+        .then((response) => response.json());
+
+        if (resp.status == 200) {
+			context.commit("UPDATE_authors",resp.authors);
+        }
+        else {
+            console.log(resp)
+            throw new Error(resp)
+        }
+    },
+
+    async newAuthor(context,payload){
+		var data = payload
+        var resp = await fetch(BASE_URL+"authors",{
+            method:'POST',
+            headers:{
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => response.json());
+
+        console.log(resp)
+		context.commit("UPDATE_message", resp.message);
+		context.commit("UPDATE_status", resp.status);
+		context.commit("UPDATE_author",resp.id)
+    },
+
+    async getAuthor(context,payload){
+		var id = payload.id
+        var resp = await fetch (BASE_URL + "authors/" + id)
+        .then((response) => response.json());
+
+        if(resp.status == 200){
+            context.commit("UPDATE_author",resp)
+        }
+        else {
+            console.log(resp)
+            throw new Error(resp)
+        } 
+    },
+	async newBook(context,payload){
+		var data = payload
+        var resp = await fetch(this.BASE_URL+"books",{
+            method:'POST',
+            headers:{
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => response.json());
+
+        console.log(resp)
+		context.commit("UPDATE_message", resp.message);
+		context.commit("UPDATE_status", resp.status);
+		context.commit("UPDATE_book",resp.id)
+    },
 
 	getters: {},
 });

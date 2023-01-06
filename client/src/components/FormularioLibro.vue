@@ -36,17 +36,35 @@ export default {
             console.log(data);
             
 
-            const api = new ClienteAPI();
-            var resp = await api.newBook(data);
-            if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
-                this.error = true
+            //const api = new ClienteAPI();
+            //var resp = await api.newBook(data);
+            await this.$store.dispatch('newBook',data);
+
+            if(this.$store.state.status==400){
+                this.error=true;
+                this.errorMessage=this.$store.state.message;
             }
+            if(this.$store.state.status==200){
+            }
+            // if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
+            //     this.error = true
+            // }
             console.log(resp)
         },
 
         async comprobarAutor(nombre){
-            const api = new ClienteAPI();
-            var listaAutoresAux = await api.getAuthors();
+            //const api = new ClienteAPI();
+            var listaAutoresAux = [];
+            //var listaAutoresAux = await api.getAuthors();
+            await this.$store.dispatch('getAuthors');
+
+            if(this.$store.state.status==400){
+                this.error=true;
+                this.errorMessage=this.$store.state.message;
+            }
+            if(this.$store.state.status==200){
+                listaAutoresAux = this.$store.state.authors;
+            }
             var listaAutores = []
 
             var aux = nombre.toLowerCase();
@@ -70,7 +88,16 @@ export default {
                 var data = {
                     name: arreglado
                 }
-                id = (await api.newAuthor(data)).id;
+                //id = (await api.newAuthor(data)).id;
+                await this.$store.dispatch('newAuthor',data);
+
+                if(this.$store.state.status==400){
+                    this.error=true;
+                    this.errorMessage=this.$store.state.message;
+                }
+                if(this.$store.state.status==200){
+                    id = this.$store.state.author;
+                }
             }
             
             return id;
