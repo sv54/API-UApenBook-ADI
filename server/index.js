@@ -184,6 +184,47 @@ app.get('/books/:id', function (req, res) {
 
 })
 
+//Obtenemos libros con la barra de busqueda
+app.get('/search', function (req, res) {
+    const strSearch = req.body.search
+    var booksSearch = []
+    for(let i = 0; i<todosLibros.length; i++){
+        booksName = todosLibros[i].name.toLowerCase()
+        if(booksName.includes(strSearch.toLowerCase())){
+            booksSearch.push(todosLibros[i])
+        }
+    }
+    let message = ''
+    if(booksSearch.length == 0){
+        message = "No se ha encontrado ningun libro"
+    }
+    else{
+        message = 'OK'
+    }
+
+    res.status = 200
+    res.send({status: res.status, books: booksSearch})
+
+
+    // let sql = `SELECT * From books WHERE id = ` + idLibro;
+    // db.all(sql, [], (err, row) => {
+    //     //console.log(row)
+
+    //     if (JSON.stringify(row) == "[]" || row == undefined) {
+    //         res.statusCode = 404
+    //         res.send({ "status": 404, "message": "El libro con id " + idLibro + " no existe o ya ha sido eliminado" });
+    //     }
+    //     else {
+    //         res.statusCode = 200
+    //         console.log(row)
+    //         res.send({ "status": 200, "libro": row })
+    //     }
+    // });
+
+
+})
+
+
 
 //publicamos un libro
 app.post('/books', mw.checkJWT, function (req, res) {
