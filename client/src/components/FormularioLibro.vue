@@ -10,7 +10,7 @@ export default {
             description: '',
             cover: '',
             pdf: '',
-            author: 0,
+            author: '',
             user_id: 0,
             error: false
         };
@@ -20,6 +20,8 @@ export default {
     },
     methods: {
         async crearLibro(){
+            var idAuthor = await this.comprobarAutor(this.author);
+
             var data= {
                 name: this.name, 
                 year: this.year, 
@@ -27,10 +29,11 @@ export default {
                 description: this.description,
                 cover: this.cover,
                 pdf: this.pdf,
-                author: this.author,
+                author: idAuthor,
                 user_id: this.user_id            
             }
             console.log(data);
+            
 
             const api = new ClienteAPI();
             var resp = await api.newBook(data);
@@ -39,6 +42,38 @@ export default {
             }
             console.log(resp)
         },
+
+        async comprobarAutor(nombre){
+            const api = new ClienteAPI();
+            var listaAutoresAux = await api.getAuthors();
+            var listaAutores = []
+
+            var aux = nombre.toLowerCase();
+            const words = aux.split(" ");
+            var id = 0;
+
+            var arreglado = words.map((word) => { 
+                return word[0].toUpperCase() + word.substring(1); 
+            }).join(" ");
+            console.log(arreglado)
+
+            for (let i = 0; i<listaAutoresAux.length;i++){
+                listaAutores.push(listaAutoresAux[i].name)
+                if(listaAutoresAux[i].name == arreglado){
+                    id = listaAutoresAux[i].id
+                }
+            }
+            console.log(listaAutores);
+
+            if(!listaAutores.includes(arreglado)){
+                var data = {
+                    name: arreglado
+                }
+                id = (await api.newAuthor(data)).id;
+            }
+            
+            return id;
+        }
 
     },
 };
@@ -68,7 +103,7 @@ export default {
                 <input class="form-input" type="file" id="pdf">
 
                 <label class="form-label" for="#author">Author:</label>
-                <input v-model="author" class="form-input" type="number" id="author">
+                <input v-model="author" class="form-input" type="text" id="author" required placeholder="">
 
                 <p v-if="error" class="error">Has hecho algo mal.</p>
                 <input class="form-submit" type="submit" value="Crear">

@@ -6,6 +6,7 @@
         return {
             name: "UApenBook",
             book: [],
+            authorName: ''
         };
     },
     methods:{
@@ -14,6 +15,9 @@
             var libro = await api.getBook(this.$route.params.id)
             this.book = libro.libro[0]
             console.log(libro.libro[0])
+            var auxName = await api.getAuthor(this.book.author);
+            auxName = auxName.author[0].name
+            this.authorName = auxName;
         }
     },
     created(){
@@ -36,7 +40,7 @@
                     {{ book.description }}
                 </div>
                 <div class="description">
-                    {{ book.author }}
+                    {{ authorName }}
                 </div>
             </div>  
         </div>

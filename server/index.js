@@ -468,3 +468,71 @@ app.listen(3000, function () {
     console.log("Servidor arrancado")
     updateTodosLibros()
 })
+
+
+//Obtener todos los AUTORES de la BD
+app.get('/authors', mw.checkJWT, function (req, res) {
+    // var token = mw.getTokenFromAuthHeader(req)
+    // var payload = jwt.decode(token,config.SECRET)
+    var payload = 0
+    let sql = `SELECT * From author`;
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            res.statusCode = 500
+            res.send({ "status": 500, "error": err });
+        }
+        else{
+            res.statusCode = 200
+            res.send({ "status": 200, "authors": rows })
+        }
+
+    });
+
+});
+
+app.post('/authors', mw.checkJWT, function (req, res) {
+    var status = 201
+    var message = "Autor ha sido creado"
+    var b = req.body
+
+    // var token = mw.getTokenFromAuthHeader(req)
+    // var payload = jwt.decode(token,config.SECRET)
+    
+    var payload = 0 //borrar una vez implementado el login
+
+    db.run(`INSERT INTO author(name) VALUES(?)`,
+        [b.name], function (err) {
+            if (err) {
+                message = err.message;
+                status = 400
+            }
+            // get the last insert id
+            console.log(`A row has been inserted with rowid ${this.lastID}`);
+            res.statusCode = status
+            res.send({ "status code": status, "message:": message, "id": this.lastID })
+    });
+
+    
+})
+
+app.get('/authors/:id', function (req, res) {
+    const idLibro = req.params.id
+    
+
+    let sql = `SELECT * From author WHERE id = ` + idLibro;
+    db.all(sql, [], (err, row) => {
+        //console.log(row)
+
+        if (JSON.stringify(row) == "[]" || row == undefined) {
+            res.statusCode = 404
+            res.send({ "status": 404, "message": "El autor con id " + idLibro + " no existe o ya ha sido eliminado" });
+        }
+        else{
+            res.statusCode = 200
+            console.log(row)
+            res.send({ "status": 200, "author": row })
+        }
+    });
+    
+
+})
