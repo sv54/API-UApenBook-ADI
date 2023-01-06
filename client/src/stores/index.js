@@ -37,10 +37,10 @@ export default createStore({
 		UPDATE_pageSize(state, pageSize) {
 			state.pageSize = pageSize;
 		},
-		UPDATE_authors(state, authors){
+		UPDATE_authors(state, authors) {
 			state.authors = authors;
 		},
-		UPDATE_author(state, author){
+		UPDATE_author(state, author) {
 			state.author = author;
 		}
 	},
@@ -117,9 +117,9 @@ export default createStore({
 			var result = undefined
 			let libros = JSON.stringify(this.state.books)
 			libros = JSON.parse(libros)
-			if(libros == undefined){
-				for(let i=0; i < libros.libros.length; i++){
-					if(libros.libros[i].id == payload.id){
+			if (libros == undefined) {
+				for (let i = 0; i < libros.libros.length; i++) {
+					if (libros.libros[i].id == payload.id) {
 						result = libros.libros[i]
 					}
 				}
@@ -142,113 +142,115 @@ export default createStore({
 		},
 
 		async getBooks(context, payload) {
-			var resp = await fetch(BASE_URL + "books?page="+payload.page+"&pageSize="+payload.pageSize)
-        	.then((response) => response.json());
+			var resp = await fetch(BASE_URL + "books?page=" + payload.page + "&pageSize=" + payload.pageSize)
+				.then((response) => response.json());
 
 			console.log("Getting all books")
-			if(resp.status == 200){
+			if (resp.status == 200) {
 				context.commit("UPDATE_books", resp)
 				context.commit("UPDATE_totalBooks", resp.total);
 				context.commit("UPDATE_status", resp.status);
 				context.commit("UPDATE_pageSize", resp.pageSize);
 			}
-			else{
+			else {
 				console.log('Error obteniendo libros')
 			}
 		},
 
 		async searchBooks(context, payload) {
-			var resp = await fetch(BASE_URL + "search/" + payload.search + "/"+ payload.page)
-        	.then((response) => response.json());
+			var resp = await fetch(BASE_URL + "search/" + payload.search + "/" + payload.page)
+				.then((response) => response.json());
 
 			console.log("Seaching books with " + payload.search)
 
-			if(resp.status == 200){
+			if (resp.status == 200) {
 				context.commit("UPDATE_books", resp.books);
 				context.commit("UPDATE_status", resp.status);
 				context.commit("UPDATE_message", resp.message);
 				context.commit("UPDATE_totalBooks", resp.total);
 
 			}
-			else{
+			else {
 				console.log('No books were found')
-				context.commit("UPDATE_books", {books: []})
+				context.commit("UPDATE_books", { books: [] })
 				context.commit("UPDATE_message", 'no OK')
 
 			}
 		},
 
-		async uploadImg(context, payload){
+		async uploadImg(context, payload) {
 			console.log(payload)
-			
-			var resp = await fetch(BASE_URL + "single",{method: "POST",
+
+			var resp = await fetch(BASE_URL + "single", {
+				method: "POST",
 				body: JSON.stringify({
 					image: payload.image,
 					image1: payload.imageURL,
 
 				})
 			})
-        	.then((response) => response.json());
+				.then((response) => response.json());
 			console.log(resp)
-		}
+		},
+
+		async getAuthors(context, payload) {
+			var resp = await fetch(BASE_URL + "authors")
+				.then((response) => response.json());
+
+			if (resp.status == 200) {
+				context.commit("UPDATE_authors", resp.authors);
+			}
+			else {
+				console.log(resp)
+				throw new Error(resp)
+			}
+		},
+
+		async newAuthor(context, payload) {
+			var data = payload
+			var resp = await fetch(BASE_URL + "authors", {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			}).then((response) => response.json());
+
+			console.log(resp)
+			context.commit("UPDATE_message", resp.message);
+			context.commit("UPDATE_status", resp.status);
+			context.commit("UPDATE_author", resp.id)
+		},
+
+		async getAuthor(context, payload) {
+			var id = payload.id
+			var resp = await fetch(BASE_URL + "authors/" + id)
+				.then((response) => response.json());
+
+			if (resp.status == 200) {
+				context.commit("UPDATE_author", resp)
+			}
+			else {
+				console.log(resp)
+				throw new Error(resp)
+			}
+		},
+		async newBook(context, payload) {
+			var data = payload
+			var resp = await fetch(this.BASE_URL + "books", {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			}).then((response) => response.json());
+
+			console.log(resp)
+			context.commit("UPDATE_message", resp.message);
+			context.commit("UPDATE_status", resp.status);
+			context.commit("UPDATE_book", resp.id)
+		},
 	},
-	async getAuthors(context,payload) {
-        var resp = await fetch(BASE_URL + "authors")
-        .then((response) => response.json());
-
-        if (resp.status == 200) {
-			context.commit("UPDATE_authors",resp.authors);
-        }
-        else {
-            console.log(resp)
-            throw new Error(resp)
-        }
-    },
-
-    async newAuthor(context,payload){
-		var data = payload
-        var resp = await fetch(BASE_URL+"authors",{
-            method:'POST',
-            headers:{
-                'Content-type':'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then((response) => response.json());
-
-        console.log(resp)
-		context.commit("UPDATE_message", resp.message);
-		context.commit("UPDATE_status", resp.status);
-		context.commit("UPDATE_author",resp.id)
-    },
-
-    async getAuthor(context,payload){
-		var id = payload.id
-        var resp = await fetch (BASE_URL + "authors/" + id)
-        .then((response) => response.json());
-
-        if(resp.status == 200){
-            context.commit("UPDATE_author",resp)
-        }
-        else {
-            console.log(resp)
-            throw new Error(resp)
-        } 
-    },
-	async newBook(context,payload){
-		var data = payload
-        var resp = await fetch(this.BASE_URL+"books",{
-            method:'POST',
-            headers:{
-                'Content-type':'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then((response) => response.json());
-
-        console.log(resp)
-		context.commit("UPDATE_message", resp.message);
-		context.commit("UPDATE_status", resp.status);
-		context.commit("UPDATE_book",resp.id)
-    },
 
 	getters: {},
 });
