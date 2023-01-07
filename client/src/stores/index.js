@@ -1,9 +1,13 @@
 import { createStore } from "vuex";
+import createPersistedState from 'vuex-persistedstate'
 const BASE_URL = "http://localhost:3000/";
 
 // Ejemplo de uso de store
 /* <p>{{ $store.state.firstName }} {{ $store.state.lastName }}</p> */
 export default createStore({
+	plugins: [createPersistedState({
+        storage: window.sessionStorage,
+    })],
 	state: {
 		JWT: "",
 		message: "",
@@ -237,7 +241,7 @@ export default createStore({
 		},
 		async newBook(context, payload) {
 			var data = payload
-			var resp = await fetch(this.BASE_URL + "books", {
+			var resp = await fetch(BASE_URL + "books", {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'

@@ -33,23 +33,22 @@ export default {
                 author: idAuthor,
                 user_id: this.user_id            
             }
-            console.log(data);
             
 
             //const api = new ClienteAPI();
             //var resp = await api.newBook(data);
             await this.$store.dispatch('newBook',data);
-
+            console.log(this.$store.state.status)
             if(this.$store.state.status==400){
                 this.error=true;
                 this.errorMessage=this.$store.state.message;
             }
-            if(this.$store.state.status==200){
+            if(this.$store.state.status==201){
+                this.$router.push("/books")
             }
             // if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
             //     this.error = true
             // }
-            console.log(resp)
         },
 
         async comprobarAutor(nombre){

@@ -250,9 +250,9 @@ app.post('/books', mw.checkJWT, function (req, res) {
             }
             // get the last insert id
             console.log(`A row has been inserted with rowid ${this.lastID}`);
-            res.statusCode = status
+            res.status = status
             updateTodosLibros();
-            res.send({ "status code": status, "message:": message, "id": this.lastID })
+            res.send({ "status": status, "message:": message, "id": this.lastID })
         });
 
 
