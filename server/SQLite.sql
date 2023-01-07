@@ -44,3 +44,16 @@ INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 8: 
 INSERT INTO books (name, language, description,user_id) VALUES('Harry Potter 9: Las reliquias 4', 'Español', 'Las reliquias 4', 3);
 INSERT INTO books (name, language, description) VALUES('Harry Potter 10: Bestias', 'Español', 'Bestias');
 INSERT INTO books (name, language, description) VALUES('Harry Potter 11: Bestias 2', 'Español', 'Bestias 2');
+
+
+INSERT INTO author (name) VALUES('Marcos1');
+INSERT INTO author (name) VALUES('Marcos2');
+INSERT INTO author (name) VALUES('Marcos3');
+INSERT INTO author (name) VALUES('Marcos4');
+INSERT INTO author (name) VALUES('Marcos5');
+INSERT INTO author (name) VALUES('Marcos6');
+INSERT INTO author (name) VALUES('Marcos7');
+INSERT INTO author (name) VALUES('Marcos8');
+INSERT INTO author (name) VALUES('Marcos9');
+INSERT INTO author (name) VALUES('Marcos10');
+INSERT INTO author (name) VALUES('Marcos11');
