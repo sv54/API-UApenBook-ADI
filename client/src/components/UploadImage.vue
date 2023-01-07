@@ -17,38 +17,48 @@ export default {
     },
     methods: {
         async uploadImage(e){
-            const image = e.target.files[0];
+            this.image = e.target.files[0];
+            this.imageUrl = URL.createObjectURL(this.image)
             const reader = new FileReader();
-            reader.readAsDataURL(image);
+            reader.readAsDataURL(this.image);
             reader.onload = e =>{
                 this.previewImage = e.target.result;
-                console.log(this.previewImage);
+                // console.log(this.previewImage);
             };
+
+            const resp = await fetch("http://localhost:3000/single", {
+                method: 'POST',
+                body: {'file': [this.imageUrl]},
+            })
+            .then((res) => console.log(res))
+            .catch((err) => ("Error occured", err));
 
             
         },
         async onChange(e) {
-            var file = e.target.files;
-            const formData = new FormData();
-            formData.append('image',file)
-            console.log(formData)
+            // var file = e.target.files;
+            // const formData = new FormData();
+            // formData.append('image',file)
+            // console.log(formData)
             
-            const resp = await fetch("http://localhost:3000/upload", {
-                method: 'POST',
-                body: {'image': [file]},
-            })
-            .then((res) => console.log(res))
-            .catch((err) => ("Error occured", err));
-            console.log(resp)
+            
 
 
-            // const file = e.target.files[0]
-            // this.image = file
-            // this.imageUrl = URL.createObjectURL(file)
+            const file = e.target.files[0]
+            this.image = file
+            this.imageUrl = URL.createObjectURL(file)
             // await this.$store.dispatch('uploadImg', {
             //     image: this.image,
             //     imgeUrl:this.imageUrl
             // })
+
+            const resp = await fetch("http://localhost:3000/upload-avatar", {
+                method: 'POST',
+                body: {avatar: file},
+            })
+            .then((res) => console.log(res))
+            .catch((err) => ("Error occured", err));
+            console.log(resp)
         },
         deleteImg(){
             this.image = null
@@ -85,7 +95,7 @@ export default {
             <h1 class="title">Registro de Usuarios</h1>
             <form action class="form" @submit.prevent="RegisterFromApi">
                 <label class="form-label fileUpload" for="#avatar">Avatar</label>
-                <input class="form-control" type="file" accept="image/*" name="avatar" @change="onChange" />
+                <input class="form-control" type="file" accept="image/*" name="avatar" @change="uploadImage" />
                 <div id="preview">
                     <img v-if="imageUrl" :src="imageUrl" />
                 </div>

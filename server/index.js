@@ -12,10 +12,11 @@ var multer = require('multer');
 var mw = require('./middleware.js');
 const cors = require('cors');
 const { ERROR } = require('sqlite3');
-
 app.use(cors())
 
 var todosLibros;
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 
 
 
@@ -62,7 +63,7 @@ app.get('/', function (req, res) {
     //redireccionamos a la pagina principal /books
 })
 
-app.post('/upload', upload.single("image"),uploadFile);
+app.post('/upload', upload.single("files"),uploadFile);
 // app.post('/upload', upload.single(image), (req,res) =>{
     
 
@@ -71,21 +72,70 @@ app.post('/upload', upload.single("image"),uploadFile);
 
 function uploadFile(req, res){
     console.log(req.body)
-    console.log(req.image)
+    console.log(req.files)
     res.status = 200
     res.send({message: "uploaded"})
 }
 
-app.post('/single', (req, res) => {
-    console.log(req)
-    upload(req,res, (err) => {
-        if(err) {
-            res.status(400).send("Something went wrong!");
-        }
-        res.send(req.file);
-    })
+app.post('/single',upload.single('file'),function (req, res, next) {
+    console.log(req.file)
+    // upload(req,res, (err) => {
+    //     if(err) {
+    //         res.status(400).send("Something went wrong!");
+    //     }
+    //     res.send(req.file);
+    // })
+    res.send({message : "subido"})
 
 
+});
+
+
+app.post('/upload-avatar', multipartMiddleware, async (req, res) => {
+    try {
+      if (!req.files) {
+        res.send({
+          status: false,
+          message: 'No file uploaded'
+        })
+      } else {
+        // Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+        let file = req.files.file
+        console.log(typeof file)
+        console.log(file)
+
+        upload.single('file')
+        res.send({
+            status: true,
+            message: 'File is uploaded',
+            data: {
+                name: file.name,
+                mimetype: file.mimetype,
+                size: file.size
+            }
+        // // Use the mv() method to place the file in the upload directory (i.e. "uploads")
+        // avatar.mv('./uploads/' + avatar.name)
+  
+        // //send response
+        // res.send({
+        //   status: true,
+        //   message: 'File is uploaded',
+        //   data: {
+        //     name: avatar.name,
+        //     mimetype: avatar.mimetype,
+        //     size: avatar.size
+        //   }
+        })
+      }
+    } catch (err) {
+        console.log(err)
+      res.status(500).send(err)
+    }
+  })
+
+app.post('/upload-avatar2', multipartMiddleware, function(req, resp) {
+console.log(req.body, req.files);
+// don't forget to delete all req.files when done
 });
 
 // app.post('/multiple', upload.array('image', 3), (req, res) => {
