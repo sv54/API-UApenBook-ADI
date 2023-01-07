@@ -18,7 +18,8 @@ export default createStore({
 		pageSize: 8,
 		authors: [],
 		author: 0,
-		userId: 0
+		userId: 0,
+		userAdmin: false
 	},
 	mutations: {
 		UPDATE_JWT(state, token) {
@@ -50,6 +51,9 @@ export default createStore({
 		},
 		UPDATE_userId(state,id){
 			state.userId=id;
+		},
+		UPDATE_userAdmin(state,admin){
+			state.userAdmin=admin;
 		}
 	},
 
@@ -71,7 +75,9 @@ export default createStore({
 				context.commit("UPDATE_message", resp.message);
 				context.commit("UPDATE_status", resp.status);
 				context.commit("UPDATE_userId",resp.id)
-				console.log("Cambiando id: ",resp.id)
+				context.commit("UPDATE_userAdmin",resp.admin)
+
+				console.log("admin: ",resp.admin)
 			} else {
 				context.commit("UPDATE_JWT", "");
 				context.commit("UPDATE_message", resp.message);
@@ -208,7 +214,6 @@ export default createStore({
 				.then((response) => response.json());
 
 			if (resp.status == 200) {
-				console.log(resp)
 				context.commit("UPDATE_authors", resp.authors);
 			}
 			else {
@@ -246,6 +251,26 @@ export default createStore({
 				throw new Error(resp)
 			}
 		},
+
+		async deleteAuthor(context, payload) {
+			var id = payload.id
+			var resp = await fetch(BASE_URL + "author/" + id, {
+				method: "DELETE",
+			})
+			.then((response) => response.json());
+			console.log(resp)
+			if (resp.status == 200) {
+				context.commit("UPDATE_message", resp.message);
+				context.commit("UPDATE_status", resp.status);
+			}
+			else {
+				console.log(resp)
+				context.commit("UPDATE_message", resp.message);
+				context.commit("UPDATE_status", resp.status);
+				throw new Error(resp)
+			}
+		},
+
 		async newBook(context, payload) {
 			var data = payload
 			var resp = await fetch(BASE_URL + "books", {

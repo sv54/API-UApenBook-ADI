@@ -452,7 +452,8 @@ app.post('/login', function (req, res) {
                         message: "OK",
                         jwt: token,
                         status: 200,
-                        id: rows[0].id
+                        id: rows[0].id,
+                        admin: rows[0].admin
                     })
                 } else {
                     res.status = 401
@@ -654,5 +655,37 @@ app.get('/authors/:id', function (req, res) {
         }
     });
     
+    
 
+})
+
+app.delete('/author/:id', mw.checkJWT, function (req, res) {
+    const idAutor = req.params.id
+
+    var token = mw.getTokenFromAuthHeader(req)
+    //var payload = jwt.decode(token, config.SECRET)
+
+    var sql = `SELECT * From author WHERE id = ` + idAutor;
+    const emptyjson = {}
+
+    db.all(sql, [], (err, row) => {
+        if (JSON.stringify(row) == "[]") {
+            res.statusCode = 404
+            res.send({ "status": 404, "message": "El autor no existe o ya ha sido eliminado" });
+        }
+        else {
+            sql = `DELETE FROM author WHERE id = ` + idAutor;
+            db.all(sql, [], (err, row) => {
+                if (err) {
+                    res.statusCode = 500
+                    res.send({ "status": 500, "message": "Error al eliminar autor" });
+
+                } else {
+                    updateTodosLibros();
+                    res.statusCode = 200
+                    res.send({ status: 200, "message": "Autor con id " + idAutor + " borrado." })
+                }
+            });
+        }
+    });
 })

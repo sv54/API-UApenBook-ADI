@@ -5,12 +5,14 @@
         return {
             name: "UApenBook",
             authors: [],
+            admin: 0,
             index: 0,
         };
     },
     methods:{
         async getAutores(){
             await this.$store.dispatch('getAuthors');
+            this.admin = this.$store.state.userAdmin
             this.index = 0
             if(this.$store.state.status==400){
                 this.error=true;
@@ -18,16 +20,19 @@
             }
             if(this.$store.state.status==200){
                 this.authors = this.$store.state.authors.slice(0,10);
-                console.log(this.authors)
-                console.log(typeof this.$store.state.authors)
             }
         },
         async loadAuthors(){
             this.index = this.index + 10
             this.authors = this.authors.concat(this.$store.state.authors.slice(this.index, this.index + 10));
-            console.log(this.authors)
+
+        },
+        async deleteAuthor(id){
+            await this.$store.dispatch('deleteAuthor',{id: id});
+            await this.getAutores()
 
         }
+
     },
     created(){
         
@@ -43,7 +48,11 @@
 
         <div id="autores">
             <div class = "row" v-for="item in authors" :key="item">
-                {{ item.name }}
+                <div class="col-6">{{ item.name }}</div>
+                <div class="col"></div>
+                <div class="col-3" v-if="admin == 1">
+                    <button class="btn btn-danger" @click="deleteAuthor(item.id)">Borrar</button>
+                </div>
             </div>
         </div>
         <button @click="loadAuthors">Get Mas Autores</button>
