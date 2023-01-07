@@ -17,7 +17,8 @@ export default createStore({
 		totalBooks: 0,
 		pageSize: 8,
 		authors: [],
-		author: []
+		author: 0,
+		userId: 0
 	},
 	mutations: {
 		UPDATE_JWT(state, token) {
@@ -46,6 +47,9 @@ export default createStore({
 		},
 		UPDATE_author(state, author) {
 			state.author = author;
+		},
+		UPDATE_userId(state,id){
+			state.userId=id;
 		}
 	},
 
@@ -66,6 +70,8 @@ export default createStore({
 				context.commit("UPDATE_JWT", resp.jwt);
 				context.commit("UPDATE_message", resp.message);
 				context.commit("UPDATE_status", resp.status);
+				context.commit("UPDATE_userId",resp.id)
+				console.log("Cambiando id: ",resp.id)
 			} else {
 				context.commit("UPDATE_JWT", "");
 				context.commit("UPDATE_message", resp.message);
@@ -254,6 +260,19 @@ export default createStore({
 			context.commit("UPDATE_message", resp.message);
 			context.commit("UPDATE_status", resp.status);
 			context.commit("UPDATE_book", resp.id)
+		},
+		async getUserBooks(context, payload) {
+			var id = payload.id
+			var resp = await fetch(BASE_URL + "users/" + id + "/books")
+				.then((response) => response.json());
+
+			if (resp.status == 200) {
+				context.commit("UPDATE_books", resp)
+			}
+			else {
+				console.log(resp)
+				throw new Error(resp)
+			}
 		},
 	},
 

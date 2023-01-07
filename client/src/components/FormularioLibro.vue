@@ -31,7 +31,7 @@ export default {
                 cover: this.cover,
                 pdf: this.pdf,
                 author: idAuthor,
-                user_id: this.user_id            
+                userId: this.$store.state.userId            
             }
             
 
@@ -90,13 +90,7 @@ export default {
                 //id = (await api.newAuthor(data)).id;
                 await this.$store.dispatch('newAuthor',data);
 
-                if(this.$store.state.status==400){
-                    this.error=true;
-                    this.errorMessage=this.$store.state.message;
-                }
-                if(this.$store.state.status==200){
-                    id = this.$store.state.author;
-                }
+                id = this.$store.state.author;
             }
             
             return id;
