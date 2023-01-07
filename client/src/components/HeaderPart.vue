@@ -42,12 +42,17 @@ export default {
                     <h5>Buscar</h5>
                 </RouterLink>
             </div>
+            <div class="headerLinks col-1">
+                <RouterLink to="/autores">
+                    <h5>Autores</h5>
+                </RouterLink>
+            </div>
             <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1">
                 <RouterLink to="/book/new">
                     <h5>Upload Book</h5>
                 </RouterLink>
             </div>
-            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-5">
+            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-4">
                 <RouterLink to="/login">
                     <h5>Login</h5>
                 </RouterLink>
@@ -57,7 +62,7 @@ export default {
                     <h5>Register</h5>
                 </RouterLink>
             </div>
-            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 offset-md-6 ">
+            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 offset-md-5 ">
                 <a class="green" @click="logout">
                     <h5>Logout</h5>
                 </a>
