@@ -298,7 +298,7 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var payload = 0 //borrar una vez implementado el login
 
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
-        [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, payload.id], function (err) {
+        [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, b.userId], function (err) {
             if (err) {
                 message = err.message;
                 status = 400
@@ -451,7 +451,8 @@ app.post('/login', function (req, res) {
                     res.send({
                         message: "OK",
                         jwt: token,
-                        status: 200
+                        status: 200,
+                        id: rows[0].id
                     })
                 } else {
                     res.status = 401
@@ -526,6 +527,23 @@ app.get('/users/:id', mw.checkJWT, function (req, res) {
 
 
 })
+
+//Obtenemos un usuario segun su id
+app.get('/users/:id/books', mw.checkJWT, function (req, res) {
+    const idUser = req.params.id
+
+    // var token = mw.getTokenFromAuthHeader(req)
+    // var payload = jwt.decode(token, config.SECRET)
+    var payload=0;
+    let sql = `SELECT b.id, b.name, b.year, b.language, b.description, b.cover, b.pdf, a.name AS author, b.user_id FROM books b LEFT JOIN author a ON b.author = a.id WHERE b.user_id = ` + idUser
+    //let sql = `SELECT * From books WHERE user_id = ` + idUser;
+    db.all(sql, [], (err, row) => {
+        console.log(row)
+
+        res.statusCode = 200
+        res.send({ "status": 200, "books": row })
+    });
+    })
 
 app.delete('/users/:id', mw.checkJWT, function (req, res) {
     const idUser = req.params.id
@@ -608,9 +626,10 @@ app.post('/authors', mw.checkJWT, function (req, res) {
                 status = 400
             }
             // get the last insert id
-            console.log(`A row has been inserted with rowid ${this.lastID}`);
+            var id = this.lastID
+            console.log(`A row has been inserted with rowid ${id}}`);
             res.statusCode = status
-            res.send({ "status code": status, "message:": message, "id": this.lastID })
+            res.send({ "status code": status, "message:": message, "id": id })
     });
 
     
