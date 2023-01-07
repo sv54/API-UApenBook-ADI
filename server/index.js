@@ -62,7 +62,12 @@ app.get('/', function (req, res) {
     //redireccionamos a la pagina principal /books
 })
 
-app.post('/upload', upload.single("image"),uploadFile);
+// app.post('/upload', upload.single("image"),uploadFile);
+app.post('/upload', upload.single(image), (req,res) =>{
+    
+
+})
+
 
 function uploadFile(req, res){
     console.log(req.body)

@@ -29,16 +29,17 @@ export default {
         },
         async onChange(e) {
             var file = e.target.files;
-            const formData = new FormData(file);
+            const formData = new FormData();
+            formData.append('image',file)
             console.log(formData)
             
-            fetch("http://localhost:3000/upload", {
+            const resp = await fetch("http://localhost:3000/upload", {
                 method: 'POST',
-                body: formData,
+                body: {'image': [file]},
             })
             .then((res) => console.log(res))
             .catch((err) => ("Error occured", err));
-            
+            console.log(resp)
 
 
             // const file = e.target.files[0]
