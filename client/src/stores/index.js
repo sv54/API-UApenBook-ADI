@@ -354,6 +354,22 @@ export default createStore({
 			context.commit("UPDATE_status", resp.status);
 			context.commit("UPDATE_book", resp.id)
 		},
+		async updateAuthor(context, payload) {
+			var data = payload
+			var resp = await fetch(BASE_URL + "authors/" + data.id, {
+				method: 'PATCH',
+				headers: {
+					'Content-type': 'application/json',
+					'Authorization': 'Bearer '+ this.state.JWT
+				},
+				body: JSON.stringify(data)
+			}).then((response) => response.json());
+
+			console.log(resp)
+			context.commit("UPDATE_message", resp.message);
+			context.commit("UPDATE_status", resp.status);
+			context.commit("UPDATE_author", resp.id)
+		},
 		async getUserBooks(context, payload) {
 			var id = payload.id
 			var resp = await fetch(BASE_URL + "users/" + id + "/books",{

@@ -649,10 +649,38 @@ app.get('/authors/:id', function (req, res) {
             res.send({ "status": 200, "author": row })
         }
     });
-    
-    
-
 })
+
+app.patch('/authors/:id', mw.checkJWT, function (req, res) {
+    const idLibro = req.params.id
+    var b = req.body
+    console.log("Update author with id: "+idLibro+" nombre: "+b.name)
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token, config.SECRET)
+
+    if (payload.admin) {
+
+        sql = 'UPDATE author SET name = "' + b.name + '" WHERE id = ' + idLibro +";"
+
+        db.all(sql, [], (err, row) => {
+            if (err) {
+                res.statusCode = 404                
+                console.log(err)
+
+                res.send({ "status": 404, "message": err });
+
+            } else {
+                res.statusCode = 200
+                res.send({ status: 200, "message": "Autor con id " + idLibro + " modificado." })
+            }
+
+        });
+    } else {
+        res.statusCode = 403
+        res.send({ status: 403, "message": "No tienes permiso para modificar este Autor." })
+    }
+    
+});
 
 app.delete('/author/:id', mw.checkJWT, function (req, res) {
     const idAutor = req.params.id

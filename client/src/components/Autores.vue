@@ -31,6 +31,9 @@
             await this.$store.dispatch('deleteAuthor',{id: id});
             await this.getAutores()
 
+        },
+        async modificarAutor(id){
+            this.$router.push('autores/'+id)
         }
 
     },
@@ -52,6 +55,8 @@
                 <div class="col"></div>
                 <div class="col-3" v-if="admin == 1">
                     <button class="btn btn-danger" @click="deleteAuthor(item.id)">Borrar</button>
+                    <button class="btn btn-danger" @click="modificarAutor(item.id)">Modificar</button>
+
                 </div>
             </div>
         </div>
