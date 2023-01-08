@@ -38,7 +38,7 @@
 
     },
     created(){
-        
+        this.getAutores();
     },
     
     
@@ -47,14 +47,14 @@
 
 <template>
     <div class = "container">
-        <button @click="getAutores">Get Autores</button>
+        <!-- <button @click="getAutores">Get Autores</button> -->
 
         <div id="autores">
             <div class = "row" v-for="item in authors" :key="item">
                 <div class="col-6">{{ item.name }}</div>
                 <div class="col"></div>
                 <div class="col-3" v-if="admin == 1">
-                    <button class="btn btn-danger" @click="deleteAuthor(item.id)">Borrar</button> 
+                    <button class="btn btn-danger" @click="deleteAuthor(item.id)" style="margin-right: 5px">Borrar</button> 
                     <button class="btn btn-primary" @click="modificarAutor(item.id)">Modificar</button>
 
                 </div>
@@ -68,5 +68,5 @@
 </template>
 
 <style scoped>
-
+    .row{padding-top: 2px;}
 </style>

@@ -44,13 +44,13 @@
         </thead>
         <tbody>
             <tr v-for="(libro,i) in this.books">
-                <th class="col-5" >{{ libro.name }}</th>
-                <th class="col-5">{{ libro.author }}</th>
-                <th>
-                <router-link :to="{name: 'UpdateBook', params: {id: libro.id}}" >
-                        <button>Modificar</button>
-                </router-link>
-                <button @click="deleteBook(libro.id,i)">Borrar</button>
+                <th class="col-4" ><h6>{{ libro.name }}</h6></th>
+                <th class="col-3"><h6>{{ libro.author }}</h6></th>
+                <th class="col">
+                    <router-link :to="{name: 'UpdateBook', params: {id: libro.id}}" >
+                            <button class="btn btn-primary" style="margin-right: 5px">Modificar</button>
+                    </router-link>
+                    <button @click="deleteBook(libro.id,i)" class="btn btn-danger">Borrar</button>
                 </th>
 
             </tr>
@@ -59,6 +59,5 @@
     </div>
 </template>
 
-<style>
-
+<style scoped>
 </style>
