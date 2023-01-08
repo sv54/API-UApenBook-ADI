@@ -21,24 +21,23 @@ function getTokenFromAuthHeader(pet) {
 exports.getTokenFromAuthHeader = getTokenFromAuthHeader
 
 exports.checkJWT = function checkJWT(pet,resp,next){
-    next();
-    // var correcto=false
-    // var token = getTokenFromAuthHeader(pet)
-    // if(token!=undefined){
-    //   try{
-    //     var decoded = jwt.decode(token,config.SECRET)
-    //     correcto=true
-    //   }catch(error){
-    //     console.log(error)
-    //   }
-    // }
-    // if (correcto) {
-    //     //Al llamar a next, el middleware "deja pasar" a la petición
-    //     //llamando al siguiente middleware
-    //     next()
-    // }
-    // else {
-    //     resp.statusCode = 401
-    //     resp.send({mensaje: "No tienes permiso.", code:401 })
-    // }
+    var correcto=false
+    var token = getTokenFromAuthHeader(pet)
+    if(token!=undefined){
+      try{
+        var decoded = jwt.decode(token,config.SECRET)
+        correcto=true
+      }catch(error){
+        console.log(error)
+      }
+    }
+    if (correcto) {
+        //Al llamar a next, el middleware "deja pasar" a la petición
+        //llamando al siguiente middleware
+        next()
+    }
+    else {
+        resp.statusCode = 401
+        resp.send({mensaje: "No tienes permiso.", code:401 })
+    }
 }

@@ -141,7 +141,12 @@ export default createStore({
 				}
 			}
 			if (result == undefined) {
-				var resp = await fetch(BASE_URL + "books/" + payload.id).then((response) =>
+				var resp = await fetch(BASE_URL + "books/" + payload.id,
+				{
+					headers:{
+						'Authorization': 'Bearer '+ this.state.JWT
+					}
+				}).then((response) =>
 					response.json()
 				);
 
@@ -158,7 +163,11 @@ export default createStore({
 		},
 
 		async getBooks(context, payload) {
-			var resp = await fetch(BASE_URL + "books?page=" + payload.page + "&pageSize=" + payload.pageSize)
+			var resp = await fetch(BASE_URL + "books?page=" + payload.page + "&pageSize=" + payload.pageSize,{
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
 				.then((response) => response.json());
 
 			console.log("Getting all books")
@@ -174,7 +183,11 @@ export default createStore({
 		},
 
 		async searchBooks(context, payload) {
-			var resp = await fetch(BASE_URL + "search/" + payload.search + "/" + payload.page)
+			var resp = await fetch(BASE_URL + "search/" + payload.search + "/" + payload.page,{
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
 				.then((response) => response.json());
 
 			console.log("Seaching books with " + payload.search)
@@ -199,6 +212,9 @@ export default createStore({
 
 			var resp = await fetch(BASE_URL + "single", {
 				method: "POST",
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				},
 				body: JSON.stringify({
 					image: payload.image,
 					image1: payload.imageURL,
@@ -210,7 +226,11 @@ export default createStore({
 		},
 
 		async getAuthors(context, payload) {
-			var resp = await fetch(BASE_URL + "authors")
+			var resp = await fetch(BASE_URL + "authors",{
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
 				.then((response) => response.json());
 
 			if (resp.status == 200) {
@@ -227,7 +247,8 @@ export default createStore({
 			var resp = await fetch(BASE_URL + "authors", {
 				method: 'POST',
 				headers: {
-					'Content-type': 'application/json'
+					'Content-type': 'application/json',
+					'Authorization': 'Bearer '+ this.state.JWT
 				},
 				body: JSON.stringify(data)
 			}).then((response) => response.json());
@@ -240,7 +261,11 @@ export default createStore({
 
 		async getAuthor(context, payload) {
 			var id = payload.id
-			var resp = await fetch(BASE_URL + "authors/" + id)
+			var resp = await fetch(BASE_URL + "authors/" + id,{
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
 				.then((response) => response.json());
 
 			if (resp.status == 200) {
@@ -256,6 +281,31 @@ export default createStore({
 			var id = payload.id
 			var resp = await fetch(BASE_URL + "author/" + id, {
 				method: "DELETE",
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
+			.then((response) => response.json());
+			console.log(resp)
+			if (resp.status == 200) {
+				context.commit("UPDATE_message", resp.message);
+				context.commit("UPDATE_status", resp.status);
+			}
+			else {
+				console.log(resp)
+				context.commit("UPDATE_message", resp.message);
+				context.commit("UPDATE_status", resp.status);
+				throw new Error(resp)
+			}
+		},
+
+		async deleteBook(context, payload) {
+			var id = payload.id
+			var resp = await fetch(BASE_URL + "books/" + id, {
+				method: "DELETE",
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
 			})
 			.then((response) => response.json());
 			console.log(resp)
@@ -276,7 +326,25 @@ export default createStore({
 			var resp = await fetch(BASE_URL + "books", {
 				method: 'POST',
 				headers: {
-					'Content-type': 'application/json'
+					'Content-type': 'application/json',
+					'Authorization': 'Bearer '+ this.state.JWT
+
+				},
+				body: JSON.stringify(data)
+			}).then((response) => response.json());
+
+			console.log(resp)
+			context.commit("UPDATE_message", resp.message);
+			context.commit("UPDATE_status", resp.status);
+			context.commit("UPDATE_book", resp.id)
+		},
+		async updateBook(context, payload) {
+			var data = payload
+			var resp = await fetch(BASE_URL + "books/" + data.id, {
+				method: 'PATCH',
+				headers: {
+					'Content-type': 'application/json',
+					'Authorization': 'Bearer '+ this.state.JWT
 				},
 				body: JSON.stringify(data)
 			}).then((response) => response.json());
@@ -288,7 +356,11 @@ export default createStore({
 		},
 		async getUserBooks(context, payload) {
 			var id = payload.id
-			var resp = await fetch(BASE_URL + "users/" + id + "/books")
+			var resp = await fetch(BASE_URL + "users/" + id + "/books",{
+				headers:{
+					'Authorization': 'Bearer '+ this.state.JWT
+				}
+			})
 				.then((response) => response.json());
 
 			if (resp.status == 200) {

@@ -13,6 +13,10 @@
             await this.$store.dispatch('getUserBooks', {id: this.$store.state.userId})
             this.books = this.$store.state.books.books
             console.log(this.books)
+        },
+        async deleteBook(id){
+            console.log("Borrando libro con id "+id)
+            await this.$store.dispatch('deleteBook', {id: id})
         }
     },
     created(){
@@ -41,7 +45,12 @@
             <tr v-for="libro in this.books">
                 <th class="col-5" >{{ libro.name }}</th>
                 <th class="col-5">{{ libro.author }}</th>
-                <th class="col-2">Borrar, Modificar</th>
+                <th>
+                <router-link :to="{name: 'UpdateBook', params: {id: libro.id}}" >
+                        <button>Modificar</button>
+                </router-link>
+                <button @click="deleteBook(libro.id)">Borrar</button>
+                </th>
 
             </tr>
         </tbody>

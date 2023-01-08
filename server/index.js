@@ -292,10 +292,9 @@ app.post('/books', mw.checkJWT, function (req, res) {
     var message = "Libro ha sido creado"
     var b = req.body
 
-    // var token = mw.getTokenFromAuthHeader(req)
-    // var payload = jwt.decode(token,config.SECRET)
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
     
-    var payload = 0 //borrar una vez implementado el login
 
     db.run(`INSERT INTO books(name,year,language,description,cover,pdf,author,user_id) VALUES(?,?,?,?,?,?,?,?)`,
         [b.name, b.year, b.language, b.description, b.cover, b.pdf, b.author, b.userId], function (err) {
@@ -358,7 +357,6 @@ app.patch('/books/:id', mw.checkJWT, function (req, res) {
 
     var token = mw.getTokenFromAuthHeader(req)
     var payload = jwt.decode(token, config.SECRET)
-
     var sql = `SELECT * From books WHERE id = ` + idLibro;
     const emptyjson = {}
     db.all(sql, [], (err, row) => {
@@ -533,9 +531,8 @@ app.get('/users/:id', mw.checkJWT, function (req, res) {
 app.get('/users/:id/books', mw.checkJWT, function (req, res) {
     const idUser = req.params.id
 
-    // var token = mw.getTokenFromAuthHeader(req)
-    // var payload = jwt.decode(token, config.SECRET)
-    var payload=0;
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token, config.SECRET)
     let sql = `SELECT b.id, b.name, b.year, b.language, b.description, b.cover, b.pdf, a.name AS author, b.user_id FROM books b LEFT JOIN author a ON b.author = a.id WHERE b.user_id = ` + idUser
     //let sql = `SELECT * From books WHERE user_id = ` + idUser;
     db.all(sql, [], (err, row) => {
@@ -592,9 +589,8 @@ app.listen(3000, function () {
 
 //Obtener todos los AUTORES de la BD
 app.get('/authors', mw.checkJWT, function (req, res) {
-    // var token = mw.getTokenFromAuthHeader(req)
-    // var payload = jwt.decode(token,config.SECRET)
-    var payload = 0
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
     let sql = `SELECT * From author`;
     db.all(sql, [], (err, rows) => {
         if (err) {
@@ -615,10 +611,9 @@ app.post('/authors', mw.checkJWT, function (req, res) {
     var message = "Autor ha sido creado"
     var b = req.body
 
-    // var token = mw.getTokenFromAuthHeader(req)
-    // var payload = jwt.decode(token,config.SECRET)
+    var token = mw.getTokenFromAuthHeader(req)
+    var payload = jwt.decode(token,config.SECRET)
     
-    var payload = 0 //borrar una vez implementado el login
 
     db.run(`INSERT INTO author(name) VALUES(?)`,
         [b.name], function (err) {
@@ -663,7 +658,7 @@ app.delete('/author/:id', mw.checkJWT, function (req, res) {
     const idAutor = req.params.id
 
     var token = mw.getTokenFromAuthHeader(req)
-    //var payload = jwt.decode(token, config.SECRET)
+    var payload = jwt.decode(token, config.SECRET)
 
     var sql = `SELECT * From author WHERE id = ` + idAutor;
     const emptyjson = {}
