@@ -5,3 +5,8 @@ Requisitos adicionales implementados:
 4) Uso de Bootstrap
 5) Uso de Vuex para gestion de estado de la aplicacion. Se guarda la informacion del usuario (Token), libros mostrados en la pagina. Los metodos de la comunicacion con el servidor tambien estan declarados. Se puede ver en /client/src/stores/index.js
 6) Listado de otro recurso, autores de libros
+
+
+Usuario admin: (Puede editar y borrar autores)
+admin@ua
+12345
