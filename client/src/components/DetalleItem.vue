@@ -23,10 +23,8 @@
         async getItemFromAPI() {
             await this.$store.dispatch('getBook', {id: this.$route.params.id})
             this.book = this.$store.state.book
-            console.log(this.book)
             if(this.book.author != null){
                 await this.$store.dispatch('getAuthor', {id: this.book.author})
-                console.log(this.$store.state.author.author[0].name)
                 this.authorName = this.$store.state.author.author[0].name
             }
             
