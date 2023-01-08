@@ -23,7 +23,6 @@ export default {
 
 <template>
     <HeaderPart />
-    {{ this.$store.state.JWT }}
     <body>
         <div>
             <RouterView />
