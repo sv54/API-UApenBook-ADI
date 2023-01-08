@@ -54,8 +54,8 @@
                 <div class="col-6">{{ item.name }}</div>
                 <div class="col"></div>
                 <div class="col-3" v-if="admin == 1">
-                    <button class="btn btn-danger" @click="deleteAuthor(item.id)">Borrar</button>
-                    <button class="btn btn-danger" @click="modificarAutor(item.id)">Modificar</button>
+                    <button class="btn btn-danger" @click="deleteAuthor(item.id)">Borrar</button> 
+                    <button class="btn btn-primary" @click="modificarAutor(item.id)">Modificar</button>
 
                 </div>
             </div>

@@ -269,7 +269,6 @@ export default createStore({
 				.then((response) => response.json());
 
 			if (resp.status == 200) {
-				console.log(resp)
 				context.commit("UPDATE_author", resp)
 			}
 			else {
