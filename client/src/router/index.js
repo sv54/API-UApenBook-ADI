@@ -16,6 +16,12 @@ const router = createRouter({
   routes: [
 
     {
+      path: '/',
+      redirect: to => {
+        return {path: '/books'}
+      }
+    },
+    {
       path: '/books',
       name: 'home',
       component: MainView

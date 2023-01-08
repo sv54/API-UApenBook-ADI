@@ -25,13 +25,9 @@ export default {
         <!-- <p>{{ this.$store.state.JWT}}</p> -->
         <div class="row">
             <div class="headerLinks col-1">
-                <h5>UApenBook</h5>
+                <h6>UApenBook</h6>
             </div>
-            <div class="headerLinks col-1">
-                <RouterLink to="/profile">
-                    <h5>Perfil</h5>
-                </RouterLink>
-            </div>
+            
             <div class="headerLinks col-1">
                 <RouterLink to="/books">
                     <h5>Home</h5>
@@ -52,7 +48,9 @@ export default {
                     <h5>Upload Book</h5>
                 </RouterLink>
             </div>
-            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-4">
+            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1">
+            </div>
+            <div v-if="this.$store.state.JWT == ''" class="headerLinks col-1 offset-md-5">
                 <RouterLink to="/login">
                     <h5>Login</h5>
                 </RouterLink>
@@ -63,6 +61,11 @@ export default {
                 </RouterLink>
             </div>
             <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 offset-md-5 ">
+                <RouterLink to="/profile">
+                    <h5>Perfil</h5>
+                </RouterLink>
+            </div>
+            <div v-if="this.$store.state.JWT != ''" class="headerLinks col-1 ">
                 <a class="green" @click="logout">
                     <h5>Logout</h5>
                 </a>
