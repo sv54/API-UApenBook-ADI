@@ -14,3 +14,7 @@ admin@ua
 Usuario normal:
 user1@ua
 12345
+
+Para ejecutar:
+en ./cliente --> npm run dev
+en ./server --> node index.js
