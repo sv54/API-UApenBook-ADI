@@ -7,6 +7,7 @@
             authors: [],
             admin: 0,
             index: 0,
+            mas: true
         };
     },
     methods:{
@@ -20,11 +21,20 @@
             }
             if(this.$store.state.status==200){
                 this.authors = this.$store.state.authors.slice(0,10);
+                console.log(this.authors)
+                if(this.authors.length != 10){
+                this.mas = false
             }
+            }
+            
+
         },
         async loadAuthors(){
             this.index = this.index + 10
             this.authors = this.authors.concat(this.$store.state.authors.slice(this.index, this.index + 10));
+            if(this.authors.length % 10 != 0){
+                this.mas = false
+            }
 
         },
         async deleteAuthor(id){
@@ -60,7 +70,9 @@
                 </div>
             </div>
         </div>
-        <button @click="loadAuthors">Get Mas Autores</button>
+        <div v-if="mas">
+            <button @click="loadAuthors" class="btn btn-success">Cargar mas autores</button>
+        </div>
 
 
 
