@@ -29,7 +29,7 @@
 
 <template>
     <div class="greetings">
-        <h1 class="green">Hi, here is your profile data!</h1>
+        <h1 class="green">Mi Perfil</h1>
     </div>
 
     <div>
