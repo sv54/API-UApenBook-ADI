@@ -328,7 +328,8 @@ app.delete('/books/:id', mw.checkJWT, function (req, res) {
             res.send({ "status": 404, "message": "El libro no existe o ya ha sido eliminado" });
         }
         else {
-            if (row[0].user_id == payload.id || row[0].admin) {
+            console.log(payload)
+            if (row[0].user_id == payload.id || payload.admin == 1) {
                 sql = `DELETE FROM books WHERE id = ` + idLibro;
                 db.all(sql, [], (err, row) => {
                     if (err) {
