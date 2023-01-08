@@ -7,6 +7,10 @@ Requisitos adicionales implementados:
 6) Listado de otro recurso, autores de libros
 
 
-Usuario admin: (Puede editar y borrar autores)
+Usuario admin: (Puede editar y borrar autores, y borrar cualquier libro)
 admin@ua
+12345
+
+Usuario normal:
+user1@ua
 12345
