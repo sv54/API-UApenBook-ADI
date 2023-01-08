@@ -1,5 +1,6 @@
 <script>
-    import { ClienteAPI } from "../../ClienteAPI";
+    import { routerKey } from "vue-router";
+import { ClienteAPI } from "../../ClienteAPI";
     export default {
     name: "App",
     data() {
@@ -27,9 +28,13 @@
                 await this.$store.dispatch('getAuthor', {id: this.book.author})
                 this.authorName = this.$store.state.author.author[0].name
             }
-            
-
         },
+        async deleteBook(id){
+            await this.$store.dispatch('deleteBook',{id: id});
+            // console.log(id)
+            this.$router.push('/books')
+        },
+        
     },
     created(){
         this.getItemFromAPI()
@@ -68,6 +73,10 @@
             </div>
             <div class="col"></div>
         </div>
+        <div class="col-3" v-if="this.$store.state.userAdmin == 1">
+           <button class="btn btn-danger" @click="deleteBook(book.id)">Borrar</button> 
+        </div>
+
         
         
     </div>
