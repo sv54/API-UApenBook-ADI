@@ -10,15 +10,28 @@
         };
     },
     methods:{
-        async getItemFromAPI(){
-            const api = new ClienteAPI;
-            var libro = await api.getBook(this.$route.params.id)
-            this.book = libro.libro[0]
-            console.log(libro.libro[0])
-            var auxName = await api.getAuthor(this.book.author);
-            auxName = auxName.author[0].name
-            this.authorName = auxName;
-        }
+        // async getItemFromAPI(){
+        //     const api = new ClienteAPI;
+        //     var libro = await api.getBook(this.$route.params.id)
+        //     this.book = libro.libro[0]
+        //     console.log(libro.libro[0])
+        //     var auxName = await api.getAuthor(this.book.author);
+        //     auxName = auxName.author[0].name
+        //     this.authorName = auxName;
+        // },
+
+        async getItemFromAPI() {
+            await this.$store.dispatch('getBook', {id: this.$route.params.id})
+            this.book = this.$store.state.book
+            console.log(this.book)
+            if(this.book.author != null){
+                await this.$store.dispatch('getAuthor', {id: this.book.author})
+                console.log(this.$store.state.author.author[0].name)
+                this.authorName = this.$store.state.author.author[0].name
+            }
+            
+
+        },
     },
     created(){
         this.getItemFromAPI()
