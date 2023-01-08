@@ -44,7 +44,8 @@ export default {
                 this.errorMessage=this.$store.state.message;
             }
             if(this.$store.state.status==201){
-                this.$router.push("/books")
+                console.log(this.$store.state.book)
+                this.$router.push("/book/"+this.$store.state.book)
             }
             // if((resp.mensaje != null || resp.mensaje != undefined) && resp.mensaje != 'OK'){
             //     this.error = true
