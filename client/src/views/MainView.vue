@@ -24,7 +24,9 @@
             await this.$store.dispatch('getBooks', {page: this.$route.params.page, pageSize: 8})
             this.books = this.$store.state.books
             this.numPaginas = Math.floor(this.books.total / this.books.pageSize) + 1
-            console.log(this.books)
+            if(this.books.total % this.books.pageSize == 0){
+                this.numPaginas = this.numPaginas - 1
+            }
         },
     },
     created(){
